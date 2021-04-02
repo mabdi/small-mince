@@ -1,5 +1,5 @@
 Class {
 	#name : #TestGrinder,
 	#superclass : #Object,
-	#category : #TestGrinder
+	#category : #'TestGrinder-core'
 }
