@@ -28,6 +28,11 @@ TGCallLogRecord >> for: aReceiver selector: aSelector args: anArgs [
 	self flag: #TODO. "add argNodes and usefull info from stack"
 ]
 
+{ #category : #testing }
+TGCallLogRecord >> isCall [
+	^ true
+]
+
 { #category : #accessing }
 TGCallLogRecord >> stackTrace [
 	^ stackTrace

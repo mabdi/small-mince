@@ -14,6 +14,11 @@ TGAbstractValue class >> with: anObject [
 		yourself
 ]
 
+{ #category : #comparing }
+TGAbstractValue >> = anObject [
+	^ false
+]
+
 { #category : #copying }
 TGAbstractValue >> clone [
 	^ self class new

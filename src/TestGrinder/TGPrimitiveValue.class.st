@@ -15,6 +15,11 @@ TGPrimitiveValue class >> with: anObject [
 	^ obj
 ]
 
+{ #category : #comparing }
+TGPrimitiveValue >> = anObject [
+	^ anObject theValue = self theValue
+]
+
 { #category : #accessing }
 TGPrimitiveValue >> clone [
 	| clone |

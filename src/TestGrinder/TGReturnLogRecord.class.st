@@ -30,6 +30,11 @@ TGReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aVa
 	self flag: #TODO. "add return Node and covered Nodes"
 ]
 
+{ #category : #testing }
+TGReturnLogRecord >> isReturn [
+	^ true
+]
+
 { #category : #accessing }
 TGReturnLogRecord >> returnNode [
 	^ returnNode

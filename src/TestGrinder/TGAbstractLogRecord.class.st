@@ -40,7 +40,7 @@ TGAbstractLogRecord >> captureLocals: context [
 
 { #category : #'as yet unclassified' }
 TGAbstractLogRecord >> captureState: anObject [
-	^ (anObject class allInstVarNames do: [ :key | 
+	^ (anObject class allInstVarNames collect: [ :key | 
 		key -> ( anObject instVarNamed: key ) tg_valueReference  ]) asDictionary 
 ]
 
@@ -52,6 +52,16 @@ TGAbstractLogRecord >> id [
 { #category : #accessing }
 TGAbstractLogRecord >> id: anObject [
 	id := anObject
+]
+
+{ #category : #testing }
+TGAbstractLogRecord >> isCall [
+	^ false
+]
+
+{ #category : #testing }
+TGAbstractLogRecord >> isReturn [
+	^ false
 ]
 
 { #category : #accessing }
