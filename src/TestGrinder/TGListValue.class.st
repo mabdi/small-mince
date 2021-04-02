@@ -7,6 +7,14 @@ Class {
 	#category : #'TestGrinder-Model'
 }
 
+{ #category : #'instance creation' }
+TGListValue class >> with: anObject [
+	| obj |
+	obj := super with: anObject.
+	obj theValues: (anObject collect: [ :x | x tg_state ]).
+	^ obj
+]
+
 { #category : #accessing }
 TGListValue >> clone [
 	| clone |

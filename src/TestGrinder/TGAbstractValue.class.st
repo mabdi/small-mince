@@ -7,6 +7,13 @@ Class {
 	#category : #'TestGrinder-Model'
 }
 
+{ #category : #'instance creation' }
+TGAbstractValue class >> with: anObject [
+	^ self new
+		theClass: anObject class;
+		yourself
+]
+
 { #category : #copying }
 TGAbstractValue >> clone [
 	^ self class new

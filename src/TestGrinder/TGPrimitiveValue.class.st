@@ -7,6 +7,14 @@ Class {
 	#category : #'TestGrinder-Model'
 }
 
+{ #category : #'instance creation' }
+TGPrimitiveValue class >> with: anObject [
+	| obj |
+	obj := super with: anObject.
+	obj theValue: anObject clone.
+	^ obj
+]
+
 { #category : #accessing }
 TGPrimitiveValue >> clone [
 	| clone |

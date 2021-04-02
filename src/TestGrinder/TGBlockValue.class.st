@@ -7,6 +7,14 @@ Class {
 	#category : #'TestGrinder-Model'
 }
 
+{ #category : #'instance creation' }
+TGBlockValue class >> with: anObject [
+	| obj |
+	obj := super with: anObject.
+	obj theASTNode: anObject sourceNode clone.
+	^ obj
+]
+
 { #category : #copying }
 TGBlockValue >> clone [
 	| clone |

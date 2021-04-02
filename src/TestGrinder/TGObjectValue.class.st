@@ -8,6 +8,20 @@ Class {
 	#category : #'TestGrinder-Model'
 }
 
+{ #category : #'as yet unclassified' }
+TGObjectValue class >> uniqueIdFor: anObject [
+	^ anObject basicIdentityHash
+]
+
+{ #category : #'instance creation' }
+TGObjectValue class >> with: anObject [
+	| obj |
+	obj := super with: anObject.
+	obj lastRecordId: -1.
+	obj uniqueId: (self uniqueIdFor: anObject).
+	^ obj
+]
+
 { #category : #accessing }
 TGObjectValue >> clone [
 	| clone |
