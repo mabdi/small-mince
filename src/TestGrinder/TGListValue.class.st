@@ -25,11 +25,6 @@ TGListValue >> clone [
 ]
 
 { #category : #accessing }
-TGListValue >> synthesisNodeBy: aSynthesizer [
-	^ aSynthesizer genVariableArgNodeFrom: self
-]
-
-{ #category : #accessing }
 TGListValue >> theValues [
 	^ theValues
 ]

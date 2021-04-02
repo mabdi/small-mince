@@ -25,11 +25,6 @@ TGBlockValue >> clone [
 ]
 
 { #category : #copying }
-TGBlockValue >> synthesisNodeBy: aSynthesizer [
-	^ aSynthesizer genBlockClosureNodeFrom: self
-]
-
-{ #category : #copying }
 TGBlockValue >> theASTNode [
 	^ theASTNode
 ]

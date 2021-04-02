@@ -26,11 +26,6 @@ TGAbstractValue >> clone [
 		yourself
 ]
 
-{ #category : #copying }
-TGAbstractValue >> synthesisNodeBy: aSynthesizer [
-	^ self subclassResponsibility
-]
-
 { #category : #'as yet unclassified' }
 TGAbstractValue >> tg_internal_class [
 	^ true

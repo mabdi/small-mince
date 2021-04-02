@@ -43,11 +43,6 @@ TGObjectReference >> lastRecordId: anObject [
 ]
 
 { #category : #accessing }
-TGObjectReference >> synthesisNodeBy: aSynthesizer [
-	^ aSynthesizer genVariableArgNodeFrom: self
-]
-
-{ #category : #accessing }
 TGObjectReference >> uniqueId [
 	^ uniqueId
 ]

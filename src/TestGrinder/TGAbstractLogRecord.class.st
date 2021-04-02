@@ -28,10 +28,10 @@ TGAbstractLogRecord >> captureArgsState: args [
 ]
 
 { #category : #'as yet unclassified' }
-TGAbstractLogRecord >> captureLocals: context [ 
+TGAbstractLogRecord >> captureLocals [ 
 	| cntx |
-	cntx := context.
-	[ cntx sender receiver tg_internal_class] 
+	cntx := thisContext.
+	[ cntx receiver tg_internal_class] 
 		whileTrue: [ cntx := cntx sender].
 	^ (cntx tempNames collect: [ :key | 
 			key -> ((cntx tempNamed: key) tg_valueReference) ]
@@ -40,7 +40,9 @@ TGAbstractLogRecord >> captureLocals: context [
 
 { #category : #'as yet unclassified' }
 TGAbstractLogRecord >> captureState: anObject [
-	^ (anObject class allInstVarNames collect: [ :key | 
+	| instNames |
+	instNames := anObject class allInstVarNames reject: [:name | name = TGObserver state_variable_name].
+	^ (instNames collect: [ :key | 
 		key -> ( anObject instVarNamed: key ) tg_valueReference  ]) asDictionary 
 ]
 

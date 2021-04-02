@@ -24,7 +24,7 @@ TGReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aVa
 	receiver := aReceiver tg_valueReference.
 	selector := aSelector.
 	state := self captureState: aReceiver.
-	locals := self captureLocals: thisContext.
+	locals := self captureLocals.
 	arguments := self captureArgsState: anArgs.
 	returnValue := aValue tg_valueReference.
 	self flag: #TODO. "add return Node and covered Nodes"

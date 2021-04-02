@@ -7,6 +7,11 @@ Class {
 	#category : #'TestGrinder-Tests-Helpers'
 }
 
+{ #category : #accessing }
+TGFakeClass1 >> balance [ 
+	^ balance 
+]
+
 { #category : #'math functions' }
 TGFakeClass1 >> initialize [ 
 	balance := 0

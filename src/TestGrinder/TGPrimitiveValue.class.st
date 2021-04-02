@@ -30,11 +30,6 @@ TGPrimitiveValue >> clone [
 ]
 
 { #category : #accessing }
-TGPrimitiveValue >> synthesisNodeBy: aSynthesizer [
-	^ aSynthesizer genLiteralArgNodeFrom: self
-]
-
-{ #category : #accessing }
 TGPrimitiveValue >> theValue [
 	^ theValue
 ]

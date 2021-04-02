@@ -13,7 +13,7 @@ TGAbstractValueTest >> testClone [
 	val := 1.
 	m := val tg_valueReference.
 	self assert: m theValue equals: val.
-	self assert: m clone ~= m.
+	self deny: m clone == m.
 	oldVal := val.
 	val := 100.
 	m2 := val tg_valueReference.
