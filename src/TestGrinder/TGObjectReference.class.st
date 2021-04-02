@@ -1,5 +1,5 @@
 Class {
-	#name : #TGObjectValue,
+	#name : #TGObjectReference,
 	#superclass : #TGAbstractValue,
 	#instVars : [
 		'uniqueId',
@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-TGObjectValue class >> uniqueIdFor: anObject [
+TGObjectReference class >> uniqueIdFor: anObject [
 	^ anObject basicIdentityHash
 ]
 
 { #category : #'instance creation' }
-TGObjectValue class >> with: anObject [
+TGObjectReference class >> with: anObject [
 	| obj |
 	obj := super with: anObject.
 	obj lastRecordId: -1.
@@ -23,7 +23,7 @@ TGObjectValue class >> with: anObject [
 ]
 
 { #category : #accessing }
-TGObjectValue >> clone [
+TGObjectReference >> clone [
 	| clone |
 	clone := super clone.
 	^ clone
@@ -33,26 +33,26 @@ TGObjectValue >> clone [
 ]
 
 { #category : #accessing }
-TGObjectValue >> lastRecordId [
+TGObjectReference >> lastRecordId [
 	^ lastRecordId
 ]
 
 { #category : #accessing }
-TGObjectValue >> lastRecordId: anObject [
+TGObjectReference >> lastRecordId: anObject [
 	lastRecordId := anObject
 ]
 
 { #category : #accessing }
-TGObjectValue >> synthesisNodeBy: aSynthesizer [
+TGObjectReference >> synthesisNodeBy: aSynthesizer [
 	^ aSynthesizer genVariableArgNodeFrom: self
 ]
 
 { #category : #accessing }
-TGObjectValue >> uniqueId [
+TGObjectReference >> uniqueId [
 	^ uniqueId
 ]
 
 { #category : #accessing }
-TGObjectValue >> uniqueId: anObject [
+TGObjectReference >> uniqueId: anObject [
 	uniqueId := anObject
 ]

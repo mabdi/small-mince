@@ -23,8 +23,25 @@ TGAbstractLogRecord >> arguments: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-TGAbstractLogRecord >> for: aReceiver selector: aSelector args: anArgs [
-	
+TGAbstractLogRecord >> captureArgsState: args [
+	^ (args collect: [ :arg | arg tg_valueReference]) 
+]
+
+{ #category : #'as yet unclassified' }
+TGAbstractLogRecord >> captureLocals: context [ 
+	| cntx |
+	cntx := context.
+	[ cntx sender receiver tg_internal_class] 
+		whileTrue: [ cntx := cntx sender].
+	^ (cntx tempNames collect: [ :key | 
+			key -> ((cntx tempNamed: key) tg_valueReference) ]
+		) asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+TGAbstractLogRecord >> captureState: anObject [
+	^ (anObject class allInstVarNames do: [ :key | 
+		key -> ( anObject instVarNamed: key ) tg_valueReference  ]) asDictionary 
 ]
 
 { #category : #accessing }
@@ -75,4 +92,9 @@ TGAbstractLogRecord >> state [
 { #category : #accessing }
 TGAbstractLogRecord >> state: anObject [
 	state := anObject
+]
+
+{ #category : #'as yet unclassified' }
+TGAbstractLogRecord >> tg_internal_class [
+	^ true
 ]

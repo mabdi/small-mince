@@ -74,20 +74,22 @@ TGProxy >> printOn: aStream [
 
 { #category : #evaluation }
 TGProxy >> run: aSelector with: anArray in: aReceiver [
-	"Log the fact that the method was called and execute it."
-
-	| result preCallData |
-	preCallData := action preCall: aSelector with: anArray in: aReceiver.
+	| result |
+	action preCall: aSelector with: anArray in: aReceiver.
 	[ result := aReceiver withArgs: anArray executeMethod: method ]
 		on: Error
-		do: [ :x | TGObserver logMe: 'Error: ' , x class name ].
+		do: [ :x | (':' join: {'Error'. x class name}) traceCr  ].
 	action
 		postCall: aSelector
 		with: anArray
 		in: aReceiver
-		result: result
-		preCallData: preCallData.
+		result: result.
 	^ result
+]
+
+{ #category : #'as yet unclassified' }
+TGProxy >> tg_internal_class [
+	^ true
 ]
 
 { #category : #evaluation }

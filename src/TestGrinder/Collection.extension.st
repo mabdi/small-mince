@@ -1,6 +1,6 @@
 Extension { #name : #Collection }
 
 { #category : #'*TestGrinder' }
-Collection >> tg_state [
+Collection >> tg_valueReference [
 	^ TGListValue with: self
 ]

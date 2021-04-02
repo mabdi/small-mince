@@ -111,12 +111,13 @@ TGObserver >> observe [
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> postCall: selector with: args in: aReceiver result: result preCallData: preCallData [
+TGObserver >> postCall: selector with: args in: aReceiver result: result [
 	| id record |
 	record := TGReturnLogRecord new
 		for: aReceiver
 		selector: selector
-		args: args.
+		args: args
+		result: result .
 	id := self recordLog: record.
 	aReceiver tg_state_updateId: id
 ]
@@ -152,6 +153,11 @@ TGObserver >> sampleCode [
 { #category : #accessing }
 TGObserver >> sampleCode: anObject [
 	sampleCode := anObject
+]
+
+{ #category : #'as yet unclassified' }
+TGObserver >> tg_internal_class [
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

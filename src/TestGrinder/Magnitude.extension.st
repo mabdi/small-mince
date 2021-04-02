@@ -1,6 +1,6 @@
 Extension { #name : #Magnitude }
 
 { #category : #'*TestGrinder' }
-Magnitude >> tg_state [
+Magnitude >> tg_valueReference [
 	^ TGPrimitiveValue with: self
 ]

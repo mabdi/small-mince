@@ -26,6 +26,11 @@ TGAbstractValue >> synthesisNodeBy: aSynthesizer [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+TGAbstractValue >> tg_internal_class [
+	^ true
+]
+
 { #category : #copying }
 TGAbstractValue >> theClass [
 	^ theClass

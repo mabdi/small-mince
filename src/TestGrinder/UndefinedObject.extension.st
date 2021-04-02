@@ -1,6 +1,6 @@
 Extension { #name : #UndefinedObject }
 
 { #category : #'*TestGrinder' }
-UndefinedObject >> tg_state [
+UndefinedObject >> tg_valueReference [
 	^ TGNullValue with: self
 ]

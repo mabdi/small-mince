@@ -11,12 +11,12 @@ Class {
 TGAbstractValueTest >> testClone [
 	| m m2 val oldVal |
 	val := 1.
-	m := val tg_state.
+	m := val tg_valueReference.
 	self assert: m theValue equals: val.
 	self assert: m clone ~= m.
 	oldVal := val.
 	val := 100.
-	m2 := val tg_state.
+	m2 := val tg_valueReference.
 	self assert: m2 theValue equals: val.
 	self deny: m2 theValue equals: oldVal.
 

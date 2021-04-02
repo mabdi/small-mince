@@ -13,22 +13,22 @@ TGObserverTrait classSide >> observerMethods [
 
 { #category : #'as yet unclassified' }
 TGObserverTrait classSide >> state_variable_name [
-	^ self instanceVariables first
-]
-
-{ #category : #'as yet unclassified' }
-TGObserverTrait >> tg_state [
-	self tg_state_init.
-	^ tg_state clone
+	^ self instVarNames first
 ]
 
 { #category : #'as yet unclassified' }
 TGObserverTrait >> tg_state_init [
-	tg_state ifNil: [ tg_state := TGObjectValue with: self ]
+	tg_state ifNil: [ tg_state := TGObjectReference with: self ]
 ]
 
 { #category : #'as yet unclassified' }
 TGObserverTrait >> tg_state_updateId: id [
 	self tg_state_init.
 	tg_state lastRecordId: id
+]
+
+{ #category : #'as yet unclassified' }
+TGObserverTrait >> tg_valueReference [
+	self tg_state_init.
+	^ tg_state clone
 ]

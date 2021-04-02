@@ -1,6 +1,6 @@
 Extension { #name : #Dictionary }
 
 { #category : #'*TestGrinder' }
-Dictionary >> tg_state [
+Dictionary >> tg_valueReference [
 	^ TGDictionaryValue  with: self
 ]

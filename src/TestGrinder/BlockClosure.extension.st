@@ -1,6 +1,6 @@
 Extension { #name : #BlockClosure }
 
 { #category : #'*TestGrinder' }
-BlockClosure >> tg_state [
+BlockClosure >> tg_valueReference [
 	^ TGBlockValue  with: self
 ]
