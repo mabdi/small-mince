@@ -3,7 +3,7 @@ Trait {
 	#instVars : [
 		'tg_state'
 	],
-	#category : #'TestGrinder-Tracer'
+	#category : #'TestGrinder-1.Tracer'
 }
 
 { #category : #'as yet unclassified' }

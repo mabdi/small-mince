@@ -32,6 +32,11 @@ TGAbstractValue >> hash [
 	^ theClass hash
 ]
 
+{ #category : #testing }
+TGAbstractValue >> isObjectValue [
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 TGAbstractValue >> tg_internal_class [
 	^ true

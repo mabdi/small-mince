@@ -1,7 +1,7 @@
 Class {
 	#name : #TestGrinder,
 	#superclass : #Object,
-	#category : #'TestGrinder-core'
+	#category : #'TestGrinder-0.Core'
 }
 
 { #category : #'as yet unclassified' }

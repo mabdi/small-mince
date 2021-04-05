@@ -4,7 +4,7 @@ A TGObserverTest is a test class for testing the behavior of TGObserver
 Class {
 	#name : #TGObserverTest,
 	#superclass : #TestCase,
-	#category : #'TestGrinder-Tests-Observation'
+	#category : #'TestGrinder-Tests-1.Tracer'
 }
 
 { #category : #tests }

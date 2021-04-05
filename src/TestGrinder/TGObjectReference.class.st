@@ -32,6 +32,11 @@ TGObjectReference >> copy [
 		yourself
 ]
 
+{ #category : #testing }
+TGObjectReference >> isObjectValue [
+	^ true
+]
+
 { #category : #accessing }
 TGObjectReference >> lastRecordId [
 	^ lastRecordId

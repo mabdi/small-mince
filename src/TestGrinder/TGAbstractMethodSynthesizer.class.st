@@ -1,7 +1,7 @@
 Class {
 	#name : #TGAbstractMethodSynthesizer,
 	#superclass : #Object,
-	#category : #'TestGrinder-Synthesis'
+	#category : #'TestGrinder-3.Synthesis'
 }
 
 { #category : #'as yet unclassified' }
