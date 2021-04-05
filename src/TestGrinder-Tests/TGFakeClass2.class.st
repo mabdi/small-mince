@@ -4,6 +4,11 @@ Class {
 	#category : #'TestGrinder-Tests-Helpers'
 }
 
+{ #category : #adding }
+TGFakeClass2 >> addHundred: aFake1 [
+	^ aFake1 sum: 100 ; yourself
+]
+
 { #category : #'as yet unclassified' }
 TGFakeClass2 >> getFake1 [
 	^ TGFakeClass1 new

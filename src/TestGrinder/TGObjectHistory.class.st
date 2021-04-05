@@ -18,12 +18,12 @@ TGObjectHistory >> = anObject [
 
 { #category : #adding }
 TGObjectHistory >> addEvent: anEvent [ 
-	self addSelector: anEvent selector event: anEvent  
+	events add: anEvent
 ]
 
-{ #category : #adding }
-TGObjectHistory >> addSelector: selector event: anEvent [ 
-	events add: (selector -> anEvent)
+{ #category : #accessing }
+TGObjectHistory >> dependsOn [
+	^ events flatCollect: #dependsOn
 ]
 
 { #category : #accessing }
@@ -50,6 +50,13 @@ TGObjectHistory >> initialize [
 { #category : #accessing }
 TGObjectHistory >> isInitialized [
 	^ isInitialized
+]
+
+{ #category : #initialization }
+TGObjectHistory >> setInitIfNil: aRecord [
+	
+	theClass ifNil: [ theClass := aRecord receiver theClass ]
+	
 ]
 
 { #category : #initialization }

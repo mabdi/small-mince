@@ -21,10 +21,11 @@ TGObjectHistoryComposer >> addAllEventsForObject: obj [
 		r isCall ifTrue: [ stack push: r ].
 		r isReturn ifTrue: [ r2 := stack pop.
 			r2 selector = r selector ifFalse: [ self error: 'something is wrong here!' ]].
-		stack ifEmpty: [ obj addEvent: (TGObjectEvent forCall: r2 return: r) ]
+		stack ifEmpty: [ obj setInitIfNil: r2.
+			obj addEvent: (TGObjectEvent forCall: r2 return: r) ]
 		 ].
-	obj initializeDone.
-	dependencies addAll: (obj dependsOn collect: [ :uId | TGObjectHistory new uId: uId; theClass: theClass ])
+	obj setInitializeDone.
+	dependencies addAll: (obj dependsOn collect: [ :objRef | TGObjectHistory new uId: objRef uniqueId ])
 ]
 
 { #category : #accessing }
@@ -35,6 +36,11 @@ TGObjectHistoryComposer >> config [
 { #category : #accessing }
 TGObjectHistoryComposer >> config: anObject [
 	config := anObject
+]
+
+{ #category : #accessing }
+TGObjectHistoryComposer >> dependencies [
+	^ dependencies
 ]
 
 { #category : #initialization }
@@ -49,7 +55,7 @@ TGObjectHistoryComposer >> initializeUniqueObjectsCallingSelector [
 	recs1 := (records select: #isCall) select: [ :rec | 
 		rec selector = theMethod and: [ theClass = rec receiver theClass] ].
 	uniqueIds := (recs1 collect: [ :rec |  rec receiver uniqueId ]) removeDuplicates.
-	objectHistories := uniqueIds collect: [ :uId | TGObjectHistory new uId: uId; theClass: theClass ]
+	objectHistories := uniqueIds collect: [ :uId | TGObjectHistory new uId: uId ]
 	
 ]
 
@@ -70,12 +76,15 @@ TGObjectHistoryComposer >> records: anObject [
 
 { #category : #running }
 TGObjectHistoryComposer >> run [
+	| newDependencies |
 	self initializeUniqueObjectsCallingSelector.
 	objectHistories do: [ :obj | 
 		self addAllEventsForObject: obj ].
-	[ dependencies anySatisfy: #isInitialized ] whileTrue: [ 
-		(dependencies select: #isInitialized) do: [ :obj |
-			self addAllEventsForObject: obj ]
+	newDependencies := (dependencies reject: #isInitialized).
+	[ newDependencies isNotEmpty ] whileTrue: [ 
+		 newDependencies do: [ :obj |
+			self addAllEventsForObject: obj ].
+		newDependencies := (dependencies reject: #isInitialized).
 	 ]
 ]
 

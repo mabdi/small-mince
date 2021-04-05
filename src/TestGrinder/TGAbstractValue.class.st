@@ -23,7 +23,7 @@ TGAbstractValue >> = anObject [
 { #category : #copying }
 TGAbstractValue >> copy [
 	^ self class new
-		theClass: self theClass copy;
+		theClass: self theClass;
 		yourself
 ]
 

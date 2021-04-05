@@ -45,14 +45,14 @@ TGObjectEvent >> dependsOn [
 { #category : #'as yet unclassified' }
 TGObjectEvent >> forCall: callRecord return: returnRecord [
 	self selector: callRecord selector.
-	self stateBefore: callRecord state.
-	self stateAfter: returnRecord state.
-	self argsBefore: callRecord arguments.
-	self argsAfter: callRecord arguments.
-	dependsOn addAll: (callRecord state select: #isObjectValue) removeDuplicates.
-	dependsOn addAll: (returnRecord state select: #isObjectValue) removeDuplicates.
-	dependsOn addAll: (callRecord argument select: #isObjectValue) removeDuplicates.
-	dependsOn addAll: (returnRecord argument select: #isObjectValue) removeDuplicates.
+	self stateBefore: (callRecord state collect: #copy).
+	self stateAfter: (returnRecord state collect: #copy).
+	self argsBefore: (callRecord arguments collect: #copy).
+	self argsAfter: (callRecord arguments collect: #copy).
+	dependsOn addAll: (self stateBefore select: #isObjectValue) values asOrderedCollection removeDuplicates.
+	dependsOn addAll: (self stateAfter select: #isObjectValue) values asOrderedCollection removeDuplicates.
+	dependsOn addAll: (self argsBefore select: #isObjectValue) asOrderedCollection removeDuplicates.
+	dependsOn addAll: (self argsAfter select: #isObjectValue) asOrderedCollection removeDuplicates.
 ]
 
 { #category : #initialization }
