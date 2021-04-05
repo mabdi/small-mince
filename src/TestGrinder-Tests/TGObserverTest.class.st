@@ -10,11 +10,11 @@ Class {
 { #category : #tests }
 TGObserverTest >> testObserve1 [
 	| obs |
-	obs := TGObserver new 
+	obs := TGTracer new 
 		config: nil;
 		captureTargets: { TGFakeClass1 };
 		sampleCode: [TGFakeClass1 new sum: 100; sum: 10].
-	obs observe.
+	obs run.
 	self assert: obs records size equals: 6.
 	self assert: obs records first class equals: TGCallLogRecord.
 	self assert: obs records second class equals: TGReturnLogRecord.
@@ -26,21 +26,21 @@ TGObserverTest >> testObserve1 [
 { #category : #tests }
 TGObserverTest >> testObserve2 [
 	| obs rec |
-	obs := TGObserver new
+	obs := TGTracer new
 		config: nil;
 		captureTargets:
 			{TGFakeClass1.
 			TGFakeClass2.
 			TGFakeClass3};
 		sampleCode: [ TGFakeClass3 new example ].
-	obs observe.
+	obs run.
 	rec := obs records at: 1.
 	self assert: rec isCall.
 	self assert: rec receiver theClass equals: TGFakeClass3.
 	self assert: rec receiver lastRecordId equals: -1.
 	self assert: rec selector equals: #example.
 	self assert: (rec state includesKey: #scale).
-	self deny: (rec state includesKey: TGObserver state_variable_name ).
+	self deny: (rec state includesKey: TGTracer state_variable_name ).
 	self assert: (rec state at: #scale) class equals: TGNullValue.
 	self assert: (rec locals at: #obs) class equals: TGSkippedValue.
 	rec := obs records at: 2.
@@ -55,6 +55,6 @@ TGObserverTest >> testObserve2 [
 	self assert: ((obs records at: 3) locals at: #tmp)  equals: 10 tg_valueReference. "Although there's no tmp defined inside do: method, its a local from example (the place where block is created)"
 	self assert: ((obs records at: 6) state at: #balance)  equals: 0 tg_valueReference. "A successful initialization when returning"
 	self assert: (obs records at: 7) isReturn.
-	self assert: (obs records at: 7) returnValue theClass equals: TGFakeClass1.
+	self assert: (obs records at:7) returnValue theClass equals: TGFakeClass1.
 	self assert: (obs records at: 7) returnValue lastRecordId equals: 6.
 ]

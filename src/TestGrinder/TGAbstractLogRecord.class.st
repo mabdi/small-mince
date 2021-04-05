@@ -41,7 +41,7 @@ TGAbstractLogRecord >> captureLocals [
 { #category : #'as yet unclassified' }
 TGAbstractLogRecord >> captureState: anObject [
 	| instNames |
-	instNames := anObject class allInstVarNames reject: [:name | name = TGObserver state_variable_name].
+	instNames := anObject class allInstVarNames reject: [:name | name = TGTracer state_variable_name].
 	^ (instNames collect: [ :key | 
 		key -> ( anObject instVarNamed: key ) tg_valueReference  ]) asDictionary 
 ]

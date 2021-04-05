@@ -1,5 +1,5 @@
 Class {
-	#name : #TGObserver,
+	#name : #TGTracer,
 	#superclass : #Object,
 	#instVars : [
 		'config',
@@ -10,21 +10,21 @@ Class {
 		'observations',
 		'records'
 	],
-	#category : #'TestGrinder-Observation'
+	#category : #'TestGrinder-Tracer'
 }
 
 { #category : #'as yet unclassified' }
-TGObserver class >> observerMethods [
-	^ TGObserverTrait observerMethods
+TGTracer class >> observerMethods [
+	^ TGTracerTrait observerMethods
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver class >> state_variable_name [
-	^ TGObserverTrait state_variable_name
+TGTracer class >> state_variable_name [
+	^ TGTracerTrait state_variable_name
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> addStateInstanceVariable: aClass [
+TGTracer >> addStateInstanceVariable: aClass [
 	aClass allSubclasses
 		do: [ :cls | 
 			(cls hasInstVarNamed: self class state_variable_name)
@@ -35,32 +35,32 @@ TGObserver >> addStateInstanceVariable: aClass [
 ]
 
 { #category : #accessing }
-TGObserver >> captureTargets [
+TGTracer >> captureTargets [
 	^ captureTargets
 ]
 
 { #category : #accessing }
-TGObserver >> captureTargets: anObject [
+TGTracer >> captureTargets: anObject [
 	captureTargets := anObject
 ]
 
 { #category : #accessing }
-TGObserver >> config [
+TGTracer >> config [
 	^ config
 ]
 
 { #category : #accessing }
-TGObserver >> config: anObject [
+TGTracer >> config: anObject [
 	config := anObject
 ]
 
 { #category : #initialization }
-TGObserver >> initialize [
+TGTracer >> initialize [
 	records := OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> installObservers [
+TGTracer >> installObservers [
 	| allsubs |
 	allsubs := captureTargets flatCollect: [ :cls | cls allSubclasses ].
 	(captureTargets difference: allsubs asSet)
@@ -70,21 +70,21 @@ TGObserver >> installObservers [
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> installObserversFor: aClass [
+TGTracer >> installObserversFor: aClass [
 	aClass methods
 		select: [ :aMethod | self isItSafeToProxyTo: aMethod ]
 		thenDo: [ :aMethod | self installProxyOn: aMethod ]
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> installProxyOn: aMethod [
+TGTracer >> installProxyOn: aMethod [
 	| link |
 	link := TGProxy on: aMethod action: self.
 	link install
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> isItSafeToProxyTo: aMethod [
+TGTracer >> isItSafeToProxyTo: aMethod [
 	(aMethod selector beginsWith: 'tg_') 
 		ifTrue: [ ^ false ].
 	({#initialization} includes: aMethod protocol)
@@ -93,25 +93,17 @@ TGObserver >> isItSafeToProxyTo: aMethod [
 ]
 
 { #category : #accessing }
-TGObserver >> observationTargets [
+TGTracer >> observationTargets [
 	^ observationTargets
 ]
 
 { #category : #accessing }
-TGObserver >> observationTargets: anObject [
+TGTracer >> observationTargets: anObject [
 	observationTargets := anObject
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> observe [
-	[ self installObservers.
-	sampleCode value ]
-		ensure: [ self uninstallObservers ].
-	^ observations
-]
-
-{ #category : #'as yet unclassified' }
-TGObserver >> postCall: selector with: args in: aReceiver result: result [
+TGTracer >> postCall: selector with: args in: aReceiver result: result [
 	| id record |
 	record := TGReturnLogRecord new
 		for: aReceiver
@@ -123,7 +115,7 @@ TGObserver >> postCall: selector with: args in: aReceiver result: result [
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> preCall: selector with: args in: aReceiver [
+TGTracer >> preCall: selector with: args in: aReceiver [
 	| id record |
 	record := TGCallLogRecord new
 		for: aReceiver
@@ -135,38 +127,46 @@ TGObserver >> preCall: selector with: args in: aReceiver [
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> recordLog: aRecord [
+TGTracer >> recordLog: aRecord [
 	records add: aRecord.
 	^ records size
 ]
 
 { #category : #accessing }
-TGObserver >> records [
+TGTracer >> records [
 	^ records
 ]
 
+{ #category : #'as yet unclassified' }
+TGTracer >> run [
+	[ self installObservers.
+	sampleCode value ]
+		ensure: [ self uninstallObservers ].
+	^ observations
+]
+
 { #category : #accessing }
-TGObserver >> sampleCode [
+TGTracer >> sampleCode [
 	^ sampleCode
 ]
 
 { #category : #accessing }
-TGObserver >> sampleCode: anObject [
+TGTracer >> sampleCode: anObject [
 	sampleCode := anObject
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> tg_internal_class [
+TGTracer >> tg_internal_class [
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> uninstallObservers [
+TGTracer >> uninstallObservers [
 	captureTargets do: [ :aClass | self uninstallObserversFor: aClass ]
 ]
 
 { #category : #'as yet unclassified' }
-TGObserver >> uninstallObserversFor: aClass [
+TGTracer >> uninstallObserversFor: aClass [
 	TGProxy cureClass: aClass.
 	self class observerMethods
 		do: [ :mtd | aClass removeSelector: mtd selector ].

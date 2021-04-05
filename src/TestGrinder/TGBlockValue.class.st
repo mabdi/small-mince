@@ -15,13 +15,24 @@ TGBlockValue class >> with: anObject [
 	^ obj
 ]
 
+{ #category : #comparing }
+TGBlockValue >> = anObject [
+	super = anObject ifFalse: [ ^ false ].
+	^ theASTNode = anObject theASTNode 
+]
+
 { #category : #copying }
-TGBlockValue >> clone [
+TGBlockValue >> copy [
 	| clone |
-	clone := super clone.
+	clone := super copy.
 	^ clone
 		theASTNode: self theASTNode;
 		yourself
+]
+
+{ #category : #comparing }
+TGBlockValue >> hash [
+	^ theASTNode hash
 ]
 
 { #category : #copying }

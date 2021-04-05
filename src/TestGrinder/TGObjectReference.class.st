@@ -23,9 +23,9 @@ TGObjectReference class >> with: anObject [
 ]
 
 { #category : #accessing }
-TGObjectReference >> clone [
+TGObjectReference >> copy [
 	| clone |
-	clone := super clone.
+	clone := super copy.
 	^ clone
 		lastRecordId: self lastRecordId;
 		uniqueId: self uniqueId;

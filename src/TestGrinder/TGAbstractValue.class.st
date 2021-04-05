@@ -16,14 +16,20 @@ TGAbstractValue class >> with: anObject [
 
 { #category : #comparing }
 TGAbstractValue >> = anObject [
-	^ false
+	self class = anObject class ifFalse: [ ^ false ].
+	^ theClass = anObject theClass
 ]
 
 { #category : #copying }
-TGAbstractValue >> clone [
+TGAbstractValue >> copy [
 	^ self class new
-		theClass: self theClass;
+		theClass: self theClass copy;
 		yourself
+]
+
+{ #category : #comparing }
+TGAbstractValue >> hash [ 
+	^ theClass hash
 ]
 
 { #category : #'as yet unclassified' }

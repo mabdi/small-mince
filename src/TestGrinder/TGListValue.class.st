@@ -15,13 +15,24 @@ TGListValue class >> with: anObject [
 	^ obj
 ]
 
+{ #category : #comparing }
+TGListValue >> = anObject [
+	super = anObject ifFalse: [ ^ false ].
+	^ theValues = anObject theValues
+]
+
 { #category : #accessing }
-TGListValue >> clone [
+TGListValue >> copy [
 	| clone |
-	clone := super clone.
+	clone := super copy.
 	^ clone
-		theValues: (self theValues collect: #clone);
+		theValues: (self theValues collect: #copy);
 		yourself
+]
+
+{ #category : #comparing }
+TGListValue >> hash [
+	^ theValues hash
 ]
 
 { #category : #accessing }
@@ -32,4 +43,9 @@ TGListValue >> theValues [
 { #category : #accessing }
 TGListValue >> theValues: anObject [
 	theValues := anObject
+]
+
+{ #category : #accessing }
+TGListValue >> valueAt: key [ 
+	^ theValues at: key
 ]

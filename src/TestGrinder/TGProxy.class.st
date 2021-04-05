@@ -5,7 +5,7 @@ Class {
 		'method',
 		'action'
 	],
-	#category : #'TestGrinder-Observation'
+	#category : #'TestGrinder-Tracer'
 }
 
 { #category : #'as yet unclassified' }

@@ -10,23 +10,29 @@ Class {
 { #category : #'instance creation' }
 TGPrimitiveValue class >> with: anObject [
 	| obj |
-	obj := super with: anObject.
-	obj theValue: anObject clone.
+	obj := super with: anObject .
+	obj theValue: anObject copy.
 	^ obj
 ]
 
 { #category : #comparing }
 TGPrimitiveValue >> = anObject [
+	super = anObject ifFalse: [ ^ false ].
 	^ anObject theValue = self theValue
 ]
 
 { #category : #accessing }
-TGPrimitiveValue >> clone [
+TGPrimitiveValue >> copy [
 	| clone |
-	clone := super clone.
+	clone := super copy.
 	^ clone
-		theValue: self theValue clone;
+		theValue: self theValue copy;
 		yourself
+]
+
+{ #category : #comparing }
+TGPrimitiveValue >> hash [
+	^ theValue hash
 ]
 
 { #category : #accessing }
