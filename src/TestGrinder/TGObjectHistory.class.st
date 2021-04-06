@@ -1,6 +1,8 @@
 Class {
 	#name : #TGObjectHistory,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'objectReference',
 		'events',
@@ -90,11 +92,6 @@ TGObjectHistory >> setInitializeDone [
 { #category : #'as yet unclassified' }
 TGObjectHistory >> synthesisBy: aSynthesizer [
 	^ aSynthesizer synthesisObjectHistory: self
-]
-
-{ #category : #'as yet unclassified' }
-TGObjectHistory >> tg_internal_class [
-	^ true
 ]
 
 { #category : #accessing }

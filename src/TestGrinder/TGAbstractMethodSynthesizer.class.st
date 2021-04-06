@@ -1,6 +1,8 @@
 Class {
 	#name : #TGAbstractMethodSynthesizer,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#category : #'TestGrinder-4.Synthesis'
 }
 
@@ -52,9 +54,4 @@ TGAbstractMethodSynthesizer >> synthesisPrimitiveValue: anObject [
 { #category : #'as yet unclassified' }
 TGAbstractMethodSynthesizer >> synthesisSkippedValue: anObject [
 	^ self subclassResponsibility 
-]
-
-{ #category : #'as yet unclassified' }
-TGAbstractMethodSynthesizer >> tg_internal_class [
-	^ true
 ]

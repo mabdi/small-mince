@@ -1,9 +1,11 @@
 Class {
 	#name : #TGTracer,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'config',
-		'sampleCode',
+		'executableCode',
 		'captureTargets',
 		'observationTargets',
 		'coverage',
@@ -52,6 +54,16 @@ TGTracer >> config [
 { #category : #accessing }
 TGTracer >> config: anObject [
 	config := anObject
+]
+
+{ #category : #accessing }
+TGTracer >> executableCode [
+	^ executableCode
+]
+
+{ #category : #accessing }
+TGTracer >> executableCode: anObject [
+	executableCode := anObject
 ]
 
 { #category : #initialization }
@@ -140,24 +152,9 @@ TGTracer >> records [
 { #category : #'as yet unclassified' }
 TGTracer >> run [
 	[ self installObservers.
-	sampleCode value ]
+	executableCode value ]
 		ensure: [ self uninstallObservers ].
 	^ observations
-]
-
-{ #category : #accessing }
-TGTracer >> sampleCode [
-	^ sampleCode
-]
-
-{ #category : #accessing }
-TGTracer >> sampleCode: anObject [
-	sampleCode := anObject
-]
-
-{ #category : #'as yet unclassified' }
-TGTracer >> tg_internal_class [
-	^ true
 ]
 
 { #category : #'as yet unclassified' }

@@ -1,6 +1,8 @@
 Class {
 	#name : #TGObjectHistoryComposer,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'config',
 		'records',
@@ -9,7 +11,7 @@ Class {
 		'objectHistories',
 		'dependencies'
 	],
-	#category : #'TestGrinder-2.HistoryComposer'
+	#category : #'TestGrinder-3.Preparation'
 }
 
 { #category : #running }
@@ -40,6 +42,11 @@ TGObjectHistoryComposer >> config: anObject [
 { #category : #accessing }
 TGObjectHistoryComposer >> dependencies [
 	^ dependencies
+]
+
+{ #category : #accessing }
+TGObjectHistoryComposer >> dependenciesFor: aHistory [
+	^ dependencies select: [ :x | aHistory dependsOn includes: x objectReference ]
 ]
 
 { #category : #initialization }

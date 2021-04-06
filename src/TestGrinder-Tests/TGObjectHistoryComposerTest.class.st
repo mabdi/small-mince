@@ -18,7 +18,7 @@ TGObjectHistoryComposerTest >> testN1 [
 	obs := TGTracer new 
 		config: self config;
 		captureTargets: { TGFakeClass1 };
-		sampleCode: [ |x1 x2 x3| x1 := TGFakeClass1 new sum: 100; balance.
+		executableCode: [ |x1 x2 x3| x1 := TGFakeClass1 new sum: 100; balance.
 			x2 := TGFakeClass1 new balance.
 			x3 := TGFakeClass1 new balance; sum: 10; sum: 10;balance; balance;sum: 10].
 	obs run.
@@ -47,7 +47,7 @@ TGObjectHistoryComposerTest >> testN2 [
 	obs := TGTracer new 
 		config: self config;
 		captureTargets: { TGFakeClass1 . TGFakeClass2};
-		sampleCode: [ |x| x := TGFakeClass1 new. TGFakeClass2 new addHundred: x].
+		executableCode: [ |x| x := TGFakeClass1 new. TGFakeClass2 new addHundred: x].
 	obs run.
 	comp := TGObjectHistoryComposer new 
 		config: self config; 

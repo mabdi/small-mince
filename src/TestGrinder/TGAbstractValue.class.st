@@ -1,6 +1,8 @@
 Class {
 	#name : #TGAbstractValue,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'theClass'
 	],
@@ -45,11 +47,6 @@ TGAbstractValue >> isTGPrimitive [
 { #category : #'as yet unclassified' }
 TGAbstractValue >> synthesisBy: aSynthesizer [
 	^ self subclassResponsibility 
-]
-
-{ #category : #'as yet unclassified' }
-TGAbstractValue >> tg_internal_class [
-	^ true
 ]
 
 { #category : #copying }

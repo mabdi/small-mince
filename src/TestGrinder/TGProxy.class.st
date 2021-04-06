@@ -1,6 +1,8 @@
 Class {
 	#name : #TGProxy,
 	#superclass : #ProtoObject,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'method',
 		'action'
@@ -85,11 +87,6 @@ TGProxy >> run: aSelector with: anArray in: aReceiver [
 		in: aReceiver
 		result: result.
 	^ result
-]
-
-{ #category : #'as yet unclassified' }
-TGProxy >> tg_internal_class [
-	^ true
 ]
 
 { #category : #evaluation }

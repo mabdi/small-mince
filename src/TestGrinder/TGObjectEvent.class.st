@@ -1,6 +1,8 @@
 Class {
 	#name : #TGObjectEvent,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'parent',
 		'selector',
@@ -110,9 +112,4 @@ TGObjectEvent >> stateBefore: anObject [
 { #category : #'as yet unclassified' }
 TGObjectEvent >> synthesisBy: aSynthesizer [
 	^ aSynthesizer synthesisObjectEvent: self
-]
-
-{ #category : #'as yet unclassified' }
-TGObjectEvent >> tg_internal_class [
-	^ true
 ]

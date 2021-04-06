@@ -1,6 +1,8 @@
 Class {
 	#name : #TGAbstractLogRecord,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'id',
 		'receiver',
@@ -104,9 +106,4 @@ TGAbstractLogRecord >> state [
 { #category : #accessing }
 TGAbstractLogRecord >> state: anObject [
 	state := anObject
-]
-
-{ #category : #'as yet unclassified' }
-TGAbstractLogRecord >> tg_internal_class [
-	^ true
 ]

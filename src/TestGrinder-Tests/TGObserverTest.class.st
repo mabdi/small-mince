@@ -13,7 +13,7 @@ TGObserverTest >> testObserve1 [
 	obs := TGTracer new 
 		config: nil;
 		captureTargets: { TGFakeClass1 };
-		sampleCode: [TGFakeClass1 new sum: 100; sum: 10].
+		executableCode: [TGFakeClass1 new sum: 100; sum: 10].
 	obs run.
 	self assert: obs records size equals: 6.
 	self assert: obs records first class equals: TGCallLogRecord.
@@ -32,7 +32,7 @@ TGObserverTest >> testObserve2 [
 			{TGFakeClass1.
 			TGFakeClass2.
 			TGFakeClass3};
-		sampleCode: [ TGFakeClass3 new example ].
+		executableCode: [ TGFakeClass3 new example ].
 	obs run.
 	rec := obs records at: 1.
 	self assert: rec isCall.

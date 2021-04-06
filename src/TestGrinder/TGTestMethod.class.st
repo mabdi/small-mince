@@ -1,6 +1,8 @@
 Class {
 	#name : #TGTestMethod,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'objectUnderTest',
 		'dependencies'

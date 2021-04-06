@@ -1,6 +1,8 @@
 Class {
 	#name : #TGAbstractPreparation,
 	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'histories'
 	],
@@ -28,10 +30,5 @@ TGAbstractPreparation >> histories: anObject [
 
 { #category : #testing }
 TGAbstractPreparation >> isTGPreparation [
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
-TGAbstractPreparation >> tg_internal_class [
 	^ true
 ]
