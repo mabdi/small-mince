@@ -2,6 +2,7 @@ Class {
 	#name : #TGObjectEvent,
 	#superclass : #Object,
 	#instVars : [
+		'parent',
 		'selector',
 		'stateBefore',
 		'stateAfter',
@@ -67,6 +68,16 @@ TGObjectEvent >> isStatePreserving [
 ]
 
 { #category : #accessing }
+TGObjectEvent >> parent [
+	^ parent
+]
+
+{ #category : #accessing }
+TGObjectEvent >> parent: anObject [
+	parent := anObject
+]
+
+{ #category : #accessing }
 TGObjectEvent >> selector [
 	^ selector
 ]
@@ -94,6 +105,11 @@ TGObjectEvent >> stateBefore [
 { #category : #accessing }
 TGObjectEvent >> stateBefore: anObject [
 	stateBefore := anObject
+]
+
+{ #category : #'as yet unclassified' }
+TGObjectEvent >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisObjectEvent: self
 ]
 
 { #category : #'as yet unclassified' }

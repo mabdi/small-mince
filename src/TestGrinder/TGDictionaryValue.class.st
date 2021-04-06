@@ -19,6 +19,11 @@ TGDictionaryValue >> hash [
 	^ theValues hash
 ]
 
+{ #category : #'as yet unclassified' }
+TGDictionaryValue >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisDictionaryValue: self
+]
+
 { #category : #accessing }
 TGDictionaryValue >> valueAt: key [ 
 	^ theValues at: key

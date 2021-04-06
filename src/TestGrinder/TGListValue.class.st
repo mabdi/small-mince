@@ -21,6 +21,11 @@ TGListValue >> = anObject [
 	^ theValues = anObject theValues
 ]
 
+{ #category : #'as yet unclassified' }
+TGListValue >> areAllPrimitive [
+	^ theValues allSatisfy: #isTGPrimitive
+]
+
 { #category : #accessing }
 TGListValue >> copy [
 	| clone |
@@ -33,6 +38,11 @@ TGListValue >> copy [
 { #category : #comparing }
 TGListValue >> hash [
 	^ theValues hash
+]
+
+{ #category : #'as yet unclassified' }
+TGListValue >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisListValue: self
 ]
 
 { #category : #accessing }

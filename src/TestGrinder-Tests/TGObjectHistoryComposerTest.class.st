@@ -4,7 +4,7 @@ A TGObjectHistoryComposerTest is a test class for testing the behavior of TGObje
 Class {
 	#name : #TGObjectHistoryComposerTest,
 	#superclass : #TestCase,
-	#category : #'TestGrinder-Tests-1.Tracer'
+	#category : #'TestGrinder-Tests-2.HistoryComposer'
 }
 
 { #category : #accessing }
@@ -57,11 +57,11 @@ TGObjectHistoryComposerTest >> testN2 [
 	comp run.
 	histories := comp objectHistories asOrderedCollection .
 	self assert: histories size equals: 1.
-	self assert: histories first theClass equals: TGFakeClass2.
+	self assert: histories first objectReference theClass equals: TGFakeClass2.
 	self assert: histories first events size equals: 1.
 	self assert: (histories first events collect: #selector) equals: (OrderedCollection newFrom: #(addHundred:)).
 	self assert: comp dependencies size equals: 1.
-	self assert: comp dependencies asOrderedCollection first theClass equals: TGFakeClass1.
-	self assert: comp dependencies asOrderedCollection first uId equals: histories first events first argsBefore first uniqueId.
+	self assert: comp dependencies asOrderedCollection first objectReference theClass equals: TGFakeClass1.
+	self assert: comp dependencies asOrderedCollection first objectReference uniqueId equals: histories first events first argsBefore first uniqueId.
 	self assert: histories first events first argsAfter first uniqueId equals: histories first events first argsBefore first uniqueId.
 ]

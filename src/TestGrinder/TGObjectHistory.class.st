@@ -2,10 +2,11 @@ Class {
 	#name : #TGObjectHistory,
 	#superclass : #Object,
 	#instVars : [
-		'theClass',
-		'uId',
+		'objectReference',
 		'events',
-		'isInitialized'
+		'isInitialized',
+		'fromEvent',
+		'toEvent'
 	],
 	#category : #'TestGrinder-Model'
 }
@@ -13,11 +14,12 @@ Class {
 { #category : #comparing }
 TGObjectHistory >> = anObject [
 	anObject class = self class ifFalse: [ ^ false ].
-	^ uId = anObject uId
+	^ objectReference = anObject objectReference
 ]
 
 { #category : #adding }
 TGObjectHistory >> addEvent: anEvent [ 
+	anEvent parent: self.
 	events add: anEvent
 ]
 
@@ -36,9 +38,19 @@ TGObjectHistory >> events: anObject [
 	events := anObject
 ]
 
+{ #category : #accessing }
+TGObjectHistory >> fromEvent [
+	^ fromEvent
+]
+
+{ #category : #accessing }
+TGObjectHistory >> fromEvent: anObject [
+	fromEvent := anObject
+]
+
 { #category : #comparing }
 TGObjectHistory >> hash [ 
-	^ uId hash
+	^ objectReference hash
 ]
 
 { #category : #initialization }
@@ -52,11 +64,22 @@ TGObjectHistory >> isInitialized [
 	^ isInitialized
 ]
 
-{ #category : #initialization }
-TGObjectHistory >> setInitIfNil: aRecord [
-	
-	theClass ifNil: [ theClass := aRecord receiver theClass ]
-	
+{ #category : #accessing }
+TGObjectHistory >> objectReference [
+	^ objectReference
+]
+
+{ #category : #accessing }
+TGObjectHistory >> objectReference: anObject [
+	objectReference := anObject
+]
+
+{ #category : #'as yet unclassified' }
+TGObjectHistory >> selectedEvents [
+	| from to |
+	to := toEvent ifNil: [ events size ] ifNotNil: [ toEvent ].
+	from := fromEvent ifNil: [ 1 ] ifNotNil: [ fromEvent ].
+	events copyFrom: from to: to 
 ]
 
 { #category : #initialization }
@@ -65,26 +88,21 @@ TGObjectHistory >> setInitializeDone [
 ]
 
 { #category : #'as yet unclassified' }
+TGObjectHistory >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisObjectHistory: self
+]
+
+{ #category : #'as yet unclassified' }
 TGObjectHistory >> tg_internal_class [
 	^ true
 ]
 
 { #category : #accessing }
-TGObjectHistory >> theClass [
-	^ theClass
+TGObjectHistory >> toEvent [
+	^ toEvent
 ]
 
 { #category : #accessing }
-TGObjectHistory >> theClass: anObject [
-	theClass := anObject
-]
-
-{ #category : #accessing }
-TGObjectHistory >> uId [
-	^ uId
-]
-
-{ #category : #accessing }
-TGObjectHistory >> uId: anObject [
-	uId := anObject
+TGObjectHistory >> toEvent: anObject [
+	toEvent := anObject
 ]

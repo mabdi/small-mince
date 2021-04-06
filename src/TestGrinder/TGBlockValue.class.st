@@ -35,6 +35,11 @@ TGBlockValue >> hash [
 	^ theASTNode hash
 ]
 
+{ #category : #'as yet unclassified' }
+TGBlockValue >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisBlockValue: self
+]
+
 { #category : #copying }
 TGBlockValue >> theASTNode [
 	^ theASTNode

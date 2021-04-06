@@ -37,6 +37,16 @@ TGAbstractValue >> isObjectValue [
 	^ false
 ]
 
+{ #category : #testing }
+TGAbstractValue >> isTGPrimitive [ 
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+TGAbstractValue >> synthesisBy: aSynthesizer [
+	^ self subclassResponsibility 
+]
+
 { #category : #'as yet unclassified' }
 TGAbstractValue >> tg_internal_class [
 	^ true

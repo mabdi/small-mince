@@ -1,15 +1,21 @@
 Class {
 	#name : #TGMinimizer,
-	#superclass : #Object,
-	#instVars : [
-		'theTrace'
-	],
-	#category : #'TestGrinder-2.Minimizer'
+	#superclass : #TGAbstractPreparation,
+	#category : #'TestGrinder-3.Preparation'
 }
 
-{ #category : #building }
-TGMinimizer >> compose [ 
-	"1. Filter all records calling theMethod on theClass"
-	"2. add all records related to the selected objects"
-	"3. add all dependencies related to the selected objects (recersive)"
+{ #category : #'as yet unclassified' }
+TGMinimizer >> doPreparation [
+	self minimizeObjects.
+	self removeRedundantObjects 
+]
+
+{ #category : #actions }
+TGMinimizer >> minimizeObjects [
+	"remove all state preserving method calls"
+]
+
+{ #category : #actions }
+TGMinimizer >> removeRedundantObjects [
+	"remove duplicated Object histories"
 ]

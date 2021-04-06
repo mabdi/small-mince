@@ -9,23 +9,22 @@ Class {
 		'objectHistories',
 		'dependencies'
 	],
-	#category : #'TestGrinder-1.Tracer'
+	#category : #'TestGrinder-2.HistoryComposer'
 }
 
 { #category : #running }
 TGObjectHistoryComposer >> addAllEventsForObject: obj [
 	| recs stack r2 |
-	recs := records select: [ :rec | obj uId = rec receiver uniqueId].
+	recs := records select: [ :rec | obj objectReference uniqueId = rec receiver uniqueId].
 	stack := Stack new.
 	recs do: [ :r |
 		r isCall ifTrue: [ stack push: r ].
 		r isReturn ifTrue: [ r2 := stack pop.
 			r2 selector = r selector ifFalse: [ self error: 'something is wrong here!' ]].
-		stack ifEmpty: [ obj setInitIfNil: r2.
-			obj addEvent: (TGObjectEvent forCall: r2 return: r) ]
+		stack ifEmpty: [ obj addEvent: (TGObjectEvent forCall: r2 return: r) ]
 		 ].
 	obj setInitializeDone.
-	dependencies addAll: (obj dependsOn collect: [ :objRef | TGObjectHistory new uId: objRef uniqueId ])
+	dependencies addAll: (obj dependsOn collect: [ :objRef | TGObjectHistory new objectReference: objRef ])
 ]
 
 { #category : #accessing }
@@ -51,11 +50,11 @@ TGObjectHistoryComposer >> initialize [
 
 { #category : #running }
 TGObjectHistoryComposer >> initializeUniqueObjectsCallingSelector [
-	| recs1 uniqueIds |
+	| recs1 receivers |
 	recs1 := (records select: #isCall) select: [ :rec | 
 		rec selector = theMethod and: [ theClass = rec receiver theClass] ].
-	uniqueIds := (recs1 collect: [ :rec |  rec receiver uniqueId ]) removeDuplicates.
-	objectHistories := uniqueIds collect: [ :uId | TGObjectHistory new uId: uId ]
+	receivers := (recs1 collect: [ :rec |  rec receiver ]) removeDuplicates.
+	objectHistories := receivers collect: [ :uId | TGObjectHistory new objectReference: uId ]
 	
 ]
 

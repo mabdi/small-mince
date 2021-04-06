@@ -11,3 +11,8 @@ TGClassPrimitiveValue class >> with: anObject [
 	obj theValue: anObject.
 	^ obj
 ]
+
+{ #category : #'as yet unclassified' }
+TGClassPrimitiveValue >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisClassPrimitiveValue: self
+]

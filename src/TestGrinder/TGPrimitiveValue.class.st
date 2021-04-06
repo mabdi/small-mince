@@ -35,6 +35,16 @@ TGPrimitiveValue >> hash [
 	^ theValue hash
 ]
 
+{ #category : #testing }
+TGPrimitiveValue >> isTGPrimitive [ 
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+TGPrimitiveValue >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisPrimitiveValue: self
+]
+
 { #category : #accessing }
 TGPrimitiveValue >> theValue [
 	^ theValue

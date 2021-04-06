@@ -47,6 +47,11 @@ TGObjectReference >> lastRecordId: anObject [
 	lastRecordId := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+TGObjectReference >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisObjectReference: self
+]
+
 { #category : #accessing }
 TGObjectReference >> uniqueId [
 	^ uniqueId
