@@ -1,8 +1,16 @@
 Class {
 	#name : #TGDefaultSynthesizer,
 	#superclass : #TGAbstractMethodSynthesizer,
+	#instVars : [
+		'varNameMapper'
+	],
 	#category : #'TestGrinder-4.Synthesis'
 }
+
+{ #category : #'as yet unclassified' }
+TGDefaultSynthesizer >> defaultVariableNameFor: aUniqId [
+	^ 'var_', aUniqId asString
+]
 
 { #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> genAssgnmentNode: aNode toVariableNode: lhsVariableNode [
@@ -19,8 +27,23 @@ TGDefaultSynthesizer >> genCallNew: aClassName [
 ]
 
 { #category : #'as yet unclassified' }
+TGDefaultSynthesizer >> genLiteral: theValue [
+	^ RBLiteralValueNode value: theValue
+]
+
+{ #category : #'as yet unclassified' }
+TGDefaultSynthesizer >> genLiteralFromString: theValue [
+	^ RBParser parseExpression: (theValue asString)
+]
+
+{ #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> genVariableFor: anObject [
 	^ RBVariableNode named: (self variableNameMapping: anObject uniqueId)
+]
+
+{ #category : #initialization }
+TGDefaultSynthesizer >> initialize [
+	varNameMapper := Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,6 +96,11 @@ TGDefaultSynthesizer >> synthesisDictionaryValueEmpty: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+TGDefaultSynthesizer >> synthesisFractionValue: anObject [
+	^ self genLiteralFromString: anObject theValue
+]
+
+{ #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> synthesisListValue: anObject [
 	anObject theValues ifEmpty: [ ^ self synthesisListValueEmpty: anObject ].
 	anObject areAllPrimitive 
@@ -117,7 +145,7 @@ TGDefaultSynthesizer >> synthesisObjectEvent: anObjectEvent [
 	| args |
 	args := anObjectEvent argsBefore collect: [ :arg | arg synthesisBy: self ].
 	^ RBMessageNode
-			receiver: (RBVariableNode named: anObjectEvent parent variableName)				
+			receiver: (self genVariableFor: anObjectEvent parent objectReference)				
 			selector: anObjectEvent selector
 			arguments: args
 ]
@@ -125,8 +153,9 @@ TGDefaultSynthesizer >> synthesisObjectEvent: anObjectEvent [
 { #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> synthesisObjectHistory: anObjectHistory [
 	| statements |
-	statements := self genAssgnmentNode: (self genCallNew: anObjectHistory theClass name) 
-			toVariableNode: (self genVariableFor: anObjectHistory).
+	statements := OrderedCollection new.
+	statements add: (self genAssgnmentNode: (self genCallNew: anObjectHistory objectReference theClass name) 
+			toVariableNode: (self genVariableFor: anObjectHistory objectReference)).
 	statements addAll: (anObjectHistory selectedEvents collect: [:ev | ev synthesisBy: self]).
 	^ statements 
 ]
@@ -138,7 +167,7 @@ TGDefaultSynthesizer >> synthesisObjectReference: anObject [
 
 { #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> synthesisPrimitiveValue: anObject [
-	^ RBLiteralValueNode value: anObject theValue 
+	^ self genLiteral: anObject theValue
 ]
 
 { #category : #'as yet unclassified' }
@@ -151,7 +180,17 @@ TGDefaultSynthesizer >> synthesisTestMethod: aTestMethod [
 	^ 1
 ]
 
+{ #category : #accessing }
+TGDefaultSynthesizer >> varNameMapper [
+	^ varNameMapper
+]
+
+{ #category : #accessing }
+TGDefaultSynthesizer >> varNameMapper: anObject [
+	varNameMapper := anObject
+]
+
 { #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> variableNameMapping: aUniqId [
-	^ self flag: #TODO 
+	^ varNameMapper at: aUniqId ifAbsent: [ self defaultVariableNameFor: aUniqId ] 
 ]

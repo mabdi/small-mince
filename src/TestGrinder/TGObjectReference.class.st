@@ -22,6 +22,12 @@ TGObjectReference class >> with: anObject [
 	^ obj
 ]
 
+{ #category : #comparing }
+TGObjectReference >> = anObject [ 
+	super = anObject ifFalse: [ ^ false ].
+	^ uniqueId = anObject uniqueId
+]
+
 { #category : #accessing }
 TGObjectReference >> copy [
 	| clone |

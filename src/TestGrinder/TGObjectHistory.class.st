@@ -79,7 +79,7 @@ TGObjectHistory >> selectedEvents [
 	| from to |
 	to := toEvent ifNil: [ events size ] ifNotNil: [ toEvent ].
 	from := fromEvent ifNil: [ 1 ] ifNotNil: [ fromEvent ].
-	events copyFrom: from to: to 
+	^ events copyFrom: from to: to 
 ]
 
 { #category : #initialization }

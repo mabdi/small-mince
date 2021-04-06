@@ -30,8 +30,8 @@ TGObjectHistoryComposerTest >> testN1 [
 	comp run.
 	histories := comp objectHistories asOrderedCollection .
 	self assert: histories size equals: 2.
-	self assert: histories first theClass equals: TGFakeClass1.
-	self assert: histories second theClass equals: TGFakeClass1.
+	self assert: histories first objectReference theClass equals: TGFakeClass1.
+	self assert: histories second objectReference theClass equals: TGFakeClass1.
 	self assert: histories first events size equals: 3.
 	self assert: histories second events size equals: 7.
 	self assert: (histories first events collect: #selector) equals: (OrderedCollection newFrom: #(initialize sum: balance)).

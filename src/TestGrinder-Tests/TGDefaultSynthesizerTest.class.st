@@ -8,6 +8,63 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+TGDefaultSynthesizerTest >> genEvent1 [
+	| ev |
+	ev := TGObjectEvent new.
+	ev selector: #sum:.
+	ev stateBefore: {  }.
+	ev stateAfter: {  }.
+	ev argsBefore: { 10 tg_valueReference }.
+	ev argsAfter: {  }.
+	^ ev
+]
+
+{ #category : #'as yet unclassified' }
+TGDefaultSynthesizerTest >> genEvent2 [
+	| evs ev objRef |
+	objRef := TGObjectReference new 
+		theClass: TGFakeClass1;
+		lastRecordId: -1; 
+		uniqueId: 99; 
+		yourself.
+	evs := OrderedCollection new.
+	ev := TGObjectEvent new.
+	ev selector: #addHundred:.
+	ev stateBefore: {  }.
+	ev stateAfter: {  }.
+	ev argsBefore: { objRef }.
+	ev argsAfter: {  }.
+	evs add: ev.
+	^ evs
+]
+
+{ #category : #'as yet unclassified' }
+TGDefaultSynthesizerTest >> genHistory [
+	| obj objRef |
+	objRef := TGObjectReference new 
+		theClass: TGFakeClass1;
+		lastRecordId: -1; 
+		uniqueId: 100; 
+		yourself.
+	obj := TGObjectHistory new objectReference: objRef.
+	obj addEvent: self genEvent1.
+	^ obj
+]
+
+{ #category : #'as yet unclassified' }
+TGDefaultSynthesizerTest >> genHistory2 [
+	| obj objRef |
+	objRef := TGObjectReference new 
+		theClass: TGFakeClass2;
+		lastRecordId: -1; 
+		uniqueId: 10; 
+		yourself.
+	obj := TGObjectHistory new objectReference: objRef.
+	self genEvent2 do: [:ev | obj addEvent: ev].
+	^ obj
+]
+
+{ #category : #'as yet unclassified' }
 TGDefaultSynthesizerTest >> getSynthesizer [
 	^ TGDefaultSynthesizer new
 ]
@@ -81,6 +138,24 @@ TGDefaultSynthesizerTest >> testFraction [
 	value := 1/2.
 	res := value tg_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '1/2'.
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
+TGDefaultSynthesizerTest >> testHistory [
+	| value res expected |
+	value := self genHistory.
+	res := value synthesisBy: self getSynthesizer.
+	expected := (RBParser parseExpression: 'var_100 := TGFakeClass1 new. var_100 sum: 10') statements.
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
+TGDefaultSynthesizerTest >> testHistoryDependent [
+	| value res expected |
+	value := self genHistory2.
+	res := value synthesisBy: self getSynthesizer.
+	expected := (RBParser parseExpression: 'var_10 := TGFakeClass2 new. var_10 addHundred: var_99') statements.
 	self assert: res equals: expected
 ]
 
