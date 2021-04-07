@@ -214,6 +214,20 @@ TGDefaultSynthesizerTest >> testListPrimitive [
 ]
 
 { #category : #tests }
+TGDefaultSynthesizerTest >> testMethod [
+	| value res expected |
+	value := TGTestMethod new 
+		methodName: #testTest; 
+		objectUnderTest: self genHistory.
+	res := value synthesisBy: self getSynthesizer.
+	expected := (RBParser parseMethod: 'testTest
+	| var_100 |
+	var_100 := TGFakeClass1 new.
+	var_100 sum: 10').
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
 TGDefaultSynthesizerTest >> testNull [ 
 	| res expected |
 	res := nil tg_valueReference synthesisBy: self getSynthesizer.

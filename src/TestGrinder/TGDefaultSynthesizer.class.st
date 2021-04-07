@@ -179,7 +179,7 @@ TGDefaultSynthesizer >> synthesisSkippedValue: anObject [
 TGDefaultSynthesizer >> synthesisTestMethod: aTestMethod [
 	| theMethod theSequence statements temporaries |
 	statements := OrderedCollection new.
-	statements add: (aTestMethod objectUnderTest synthesisBy: self).
+	statements addAll: (aTestMethod objectUnderTest synthesisBy: self).
 	temporaries := statements
 		select: #isAssignment
 		thenCollect: [ :anAssignment | RBTemporaryNode named: anAssignment variable name ].
