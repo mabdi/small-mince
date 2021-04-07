@@ -49,6 +49,11 @@ TGObjectHistoryComposer >> dependenciesFor: aHistory [
 	^ dependencies select: [ :x | aHistory dependsOn includes: x objectReference ]
 ]
 
+{ #category : #'as yet unclassified' }
+TGObjectHistoryComposer >> historiesCache [
+	self flag: #TODO. "add a cache mechanism to access to a shared cache which holds generated histories"
+]
+
 { #category : #initialization }
 TGObjectHistoryComposer >> initialize [ 
 	objectHistories := OrderedCollection new.

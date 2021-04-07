@@ -4,7 +4,7 @@ A TGObjectHistoryComposerTest is a test class for testing the behavior of TGObje
 Class {
 	#name : #TGObjectHistoryComposerTest,
 	#superclass : #TestCase,
-	#category : #'TestGrinder-Tests-2.HistoryComposer'
+	#category : #'TestGrinder-Tests-3.Preparation'
 }
 
 { #category : #accessing }

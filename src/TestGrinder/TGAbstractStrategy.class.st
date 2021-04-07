@@ -11,11 +11,6 @@ Class {
 	#category : #'TestGrinder-2.Strategies'
 }
 
-{ #category : #'as yet unclassified' }
-TGAbstractStrategy >> buildTestMethods [
-	^ self subclassResponsibility 
-]
-
 { #category : #accessing }
 TGAbstractStrategy >> classesUnderTest [
 	^ classesUnderTest
@@ -29,6 +24,11 @@ TGAbstractStrategy >> classesUnderTest: anObject [
 { #category : #initialization }
 TGAbstractStrategy >> initialize [ 
 	results := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+TGAbstractStrategy >> run [
+	^ self subclassResponsibility 
 ]
 
 { #category : #'as yet unclassified' }

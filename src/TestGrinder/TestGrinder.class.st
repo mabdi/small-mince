@@ -52,7 +52,7 @@ TestGrinder >> run [
 	testMethodModels := self strategy 
 		traces: traces;
 		classesUnderTest: self classesUnderTest; 
-		buildTestMethods.
+		run.
 	generatedTests := testMethodModels collect: [ :testModel | 
 		testModel synthesisBy: self strategy synthesizer ].
 	generatedTests keysAndValuesDo: [ :key :value | 

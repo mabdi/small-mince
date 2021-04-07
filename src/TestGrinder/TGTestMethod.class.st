@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'TGInternalClassesTrait classTrait',
 	#instVars : [
 		'objectUnderTest',
-		'dependencies'
+		'dependencies',
+		'methodName'
 	],
 	#category : #'TestGrinder-Model'
 }
@@ -18,6 +19,16 @@ TGTestMethod >> dependencies [
 { #category : #accessing }
 TGTestMethod >> dependencies: anObject [
 	dependencies := anObject
+]
+
+{ #category : #accessing }
+TGTestMethod >> methodName [
+	^ methodName
+]
+
+{ #category : #accessing }
+TGTestMethod >> methodName: anObject [
+	methodName := anObject
 ]
 
 { #category : #accessing }

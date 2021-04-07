@@ -2,13 +2,13 @@
 A TGObserverTest is a test class for testing the behavior of TGObserver
 "
 Class {
-	#name : #TGObserverTest,
+	#name : #TGTracerTest,
 	#superclass : #TestCase,
 	#category : #'TestGrinder-Tests-1.Tracer'
 }
 
 { #category : #tests }
-TGObserverTest >> testObserve1 [
+TGTracerTest >> testTrace1 [
 	| obs |
 	obs := TGTracer new 
 		config: nil;
@@ -24,7 +24,7 @@ TGObserverTest >> testObserve1 [
 ]
 
 { #category : #tests }
-TGObserverTest >> testObserve2 [
+TGTracerTest >> testTrace2 [
 	| obs rec |
 	obs := TGTracer new
 		config: nil;

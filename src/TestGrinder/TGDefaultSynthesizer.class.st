@@ -177,7 +177,15 @@ TGDefaultSynthesizer >> synthesisSkippedValue: anObject [
 
 { #category : #'as yet unclassified' }
 TGDefaultSynthesizer >> synthesisTestMethod: aTestMethod [
-	^ 1
+	| theMethod theSequence statements temporaries |
+	statements := OrderedCollection new.
+	statements add: (aTestMethod objectUnderTest synthesisBy: self).
+	temporaries := statements
+		select: #isAssignment
+		thenCollect: [ :anAssignment | RBTemporaryNode named: anAssignment variable name ].
+	theSequence := RBSequenceNode temporaries: temporaries statements: statements.
+	theMethod := RBMethodNode selector: aTestMethod methodName body: theSequence.
+	^ theMethod
 ]
 
 { #category : #accessing }
