@@ -1,0 +1,37 @@
+name: smalltalkCI
+# based  on https://raw.githubusercontent.com/hpi-swa/smalltalkCI/master/.github/workflows/main.yml
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.appveyor.yml'
+      - '.travis.yml'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.appveyor.yml'
+      - '.travis.yml'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest]
+        smalltalk:
+          - Pharo64-stable
+          - Pharo64-9.0
+          - Pharo64-8.0
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hpi-swa/setup-smalltalkCI@v1
+        id: smalltalkci
+        with:
+          smalltalk-image: ${{ matrix.smalltalk }}
+      - run: smalltalkci -s ${{ matrix.smalltalk }}
+        shell: bash
+        timeout-minutes: 15
