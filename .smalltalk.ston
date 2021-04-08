@@ -9,7 +9,7 @@ SmalltalkCISpec {
     ],
     #testing : {
         #include : {
-            #packages : [ 'TestGrinder-Tests*' ],
+            #packages : [ 'TestGrinder-Tests*' ]
         },
         #coverage : {
             #packages : [ 'TestGrinder*' ]
