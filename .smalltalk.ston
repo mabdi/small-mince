@@ -12,8 +12,7 @@ SmalltalkCISpec {
             #packages : [ 'TestGrinder-Tests*' ],
         },
         #coverage : {
-            #packages : [ 'TestGrinder*' ],
-            #format : #coveralls
+            #packages : [ 'TestGrinder*' ]
         }
     }
 }
