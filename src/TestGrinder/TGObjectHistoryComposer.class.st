@@ -20,6 +20,7 @@ TGObjectHistoryComposer >> addAllEventsForObject: obj [
 	recs := records select: [ :rec | obj objectReference uniqueId = rec receiver uniqueId].
 	stack := Stack new.
 	recs do: [ :r |
+		self flag: #TODO. "if the method under test is not at depth 0, you need to break a call"
 		r isCall ifTrue: [ stack push: r ].
 		r isReturn ifTrue: [ r2 := stack pop.
 			r2 selector = r selector ifFalse: [ self error: 'something is wrong here!' ]].

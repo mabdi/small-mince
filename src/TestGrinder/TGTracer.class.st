@@ -68,7 +68,7 @@ TGTracer >> executableCode: anObject [
 
 { #category : #initialization }
 TGTracer >> initialize [
-	records := OrderedCollection new
+	records := OrderedCollection new.
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,7 +133,6 @@ TGTracer >> preCall: selector with: args in: aReceiver [
 		for: aReceiver
 		selector: selector
 		args: args.
-	self flag: #TODO.	"install metalink here to the nodes in the method to capture the coverage"
 	id := self recordLog: record.
 	aReceiver tg_state_updateId: id
 ]
@@ -141,6 +140,7 @@ TGTracer >> preCall: selector with: args in: aReceiver [
 { #category : #'as yet unclassified' }
 TGTracer >> recordLog: aRecord [
 	records add: aRecord.
+	aRecord id: records size.
 	^ records size
 ]
 

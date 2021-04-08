@@ -40,8 +40,9 @@ TGMethodBasedFocusedTestsStrategy >> composedObjectsToTestModel [
 
 { #category : #initialization }
 TGMethodBasedFocusedTestsStrategy >> initialize [ 
+	super initialize.
 	synthesizer := TGDefaultSynthesizer new.
-	results := Dictionary new
+	
 ]
 
 { #category : #'as yet unclassified' }

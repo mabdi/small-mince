@@ -2,22 +2,10 @@ Class {
 	#name : #TGReturnLogRecord,
 	#superclass : #TGAbstractLogRecord,
 	#instVars : [
-		'returnValue',
-		'returnNode',
-		'coveredNodes'
+		'returnValue'
 	],
 	#category : #'TestGrinder-Model'
 }
-
-{ #category : #accessing }
-TGReturnLogRecord >> coveredNodes [
-	^ coveredNodes
-]
-
-{ #category : #accessing }
-TGReturnLogRecord >> coveredNodes: anObject [
-	coveredNodes := anObject
-]
 
 { #category : #'as yet unclassified' }
 TGReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aValue [
@@ -27,22 +15,11 @@ TGReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aVa
 	locals := self captureLocals.
 	arguments := self captureArgsState: anArgs.
 	returnValue := aValue tg_valueReference.
-	self flag: #TODO. "add return Node and covered Nodes"
 ]
 
 { #category : #testing }
 TGReturnLogRecord >> isReturn [
 	^ true
-]
-
-{ #category : #accessing }
-TGReturnLogRecord >> returnNode [
-	^ returnNode
-]
-
-{ #category : #accessing }
-TGReturnLogRecord >> returnNode: anObject [
-	returnNode := anObject
 ]
 
 { #category : #accessing }

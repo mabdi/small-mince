@@ -1,11 +1,6 @@
 Extension { #name : #Object }
 
 { #category : #'*TestGrinder' }
-Object >> isTGPreparation [
-	^ false
-]
-
-{ #category : #'*TestGrinder' }
 Object >> tg_internal_class [
 	^ false
 ]

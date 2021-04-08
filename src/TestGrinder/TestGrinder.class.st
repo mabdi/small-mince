@@ -75,8 +75,6 @@ TestGrinder >> run [
 		].
 	generatedTests keysAndValuesDo: [ :key :value | 
 			TGTestClassBuilder new buildFor: key methods: value ].
-	TGTestClassBuilder new defaultTempPackage asPackage browse.
-	traces inspect
 ]
 
 { #category : #accessing }

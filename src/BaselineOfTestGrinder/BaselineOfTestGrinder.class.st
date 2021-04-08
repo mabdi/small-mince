@@ -10,6 +10,8 @@ BaselineOfTestGrinder >> baseline: spec [
 	spec
 		for: #common
 		do: [ spec package: 'TestGrinder'.
+			spec package: 'TestGrinder-Tests'
+			with: [ spec requires: #( 'TestGrinder' ) ].
 			spec group: 'core' with: #('TestGrinder').
 			 ]
 ]

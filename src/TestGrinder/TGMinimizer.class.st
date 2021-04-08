@@ -1,6 +1,8 @@
 Class {
 	#name : #TGMinimizer,
-	#superclass : #TGAbstractPreparation,
+	#superclass : #Object,
+	#traits : 'TGInternalClassesTrait',
+	#classTraits : 'TGInternalClassesTrait classTrait',
 	#category : #'TestGrinder-3.Preparation'
 }
 

@@ -1,22 +1,8 @@
 Class {
 	#name : #TGCallLogRecord,
 	#superclass : #TGAbstractLogRecord,
-	#instVars : [
-		'stackTrace',
-		'argNodes'
-	],
 	#category : #'TestGrinder-Model'
 }
-
-{ #category : #accessing }
-TGCallLogRecord >> argNodes [
-	^ argNodes
-]
-
-{ #category : #accessing }
-TGCallLogRecord >> argNodes: anObject [
-	argNodes := anObject
-]
 
 { #category : #'as yet unclassified' }
 TGCallLogRecord >> for: aReceiver selector: aSelector args: anArgs [
@@ -31,14 +17,4 @@ TGCallLogRecord >> for: aReceiver selector: aSelector args: anArgs [
 { #category : #testing }
 TGCallLogRecord >> isCall [
 	^ true
-]
-
-{ #category : #accessing }
-TGCallLogRecord >> stackTrace [
-	^ stackTrace
-]
-
-{ #category : #accessing }
-TGCallLogRecord >> stackTrace: anObject [
-	stackTrace := anObject
 ]

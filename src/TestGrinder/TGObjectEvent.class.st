@@ -10,6 +10,7 @@ Class {
 		'stateAfter',
 		'argsBefore',
 		'argsAfter',
+		'returnValue',
 		'dependsOn'
 	],
 	#category : #'TestGrinder-Model'
@@ -56,6 +57,7 @@ TGObjectEvent >> forCall: callRecord return: returnRecord [
 	dependsOn addAll: (self stateAfter select: #isObjectValue) values asOrderedCollection removeDuplicates.
 	dependsOn addAll: (self argsBefore select: #isObjectValue) asOrderedCollection removeDuplicates.
 	dependsOn addAll: (self argsAfter select: #isObjectValue) asOrderedCollection removeDuplicates.
+	self returnValue: returnRecord returnValue copy
 ]
 
 { #category : #initialization }
@@ -77,6 +79,16 @@ TGObjectEvent >> parent [
 { #category : #accessing }
 TGObjectEvent >> parent: anObject [
 	parent := anObject
+]
+
+{ #category : #accessing }
+TGObjectEvent >> returnValue [
+	^ returnValue
+]
+
+{ #category : #accessing }
+TGObjectEvent >> returnValue: anObject [
+	returnValue := anObject
 ]
 
 { #category : #accessing }

@@ -36,11 +36,6 @@ TGObjectHistory >> events [
 ]
 
 { #category : #accessing }
-TGObjectHistory >> events: anObject [
-	events := anObject
-]
-
-{ #category : #accessing }
 TGObjectHistory >> fromEvent [
 	^ fromEvent
 ]

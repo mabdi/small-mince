@@ -65,3 +65,28 @@ TGObjectHistoryComposerTest >> testN2 [
 	self assert: comp dependencies asOrderedCollection first objectReference uniqueId equals: histories first events first argsBefore first uniqueId.
 	self assert: histories first events first argsAfter first uniqueId equals: histories first events first argsBefore first uniqueId.
 ]
+
+{ #category : #tests }
+TGObjectHistoryComposerTest >> testN3 [
+	| obs comp histories |
+	obs := TGTracer new 
+		config: self config;
+		captureTargets: { TGFakeClass1 . TGFakeClass2};
+		executableCode: [ |x| x := TGFakeClass2 new run].
+	obs run.
+	comp := TGObjectHistoryComposer new 
+		config: self config; 
+		theClass: TGFakeClass2; 
+		theMethod: #getFake1; 
+		records: obs records.
+	comp run.
+	histories := comp objectHistories asOrderedCollection .
+	self assert: histories size equals: 1.
+	self assert: histories first objectReference theClass equals: TGFakeClass2.
+	self assert: histories first events size equals: 1.
+	self assert: (histories first events collect: #selector) equals: (OrderedCollection newFrom: #(getFake1)).
+	self assert: comp dependencies size equals: 1.
+	self assert: comp dependencies asOrderedCollection first objectReference theClass equals: TGFakeClass1.
+	self assert: comp dependencies asOrderedCollection first objectReference uniqueId equals: histories first events first argsBefore first uniqueId.
+	self assert: histories first events first argsAfter first uniqueId equals: histories first events first argsBefore first uniqueId.
+]
