@@ -9,7 +9,8 @@ SmalltalkCISpec {
     ],
     #testing : {
         #coverage : {
-            #packages : [ 'TestGrinder*' ]
+            #packages : [ 'TestGrinder*' ],
+            #format : #lcov
         }
     }
 }
