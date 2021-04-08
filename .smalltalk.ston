@@ -8,15 +8,8 @@ SmalltalkCISpec {
         }
     ],
     #testing : {
-        #include : {
-            #packages : [ 'SmalltalkTestGrinder-Tests*' ]
-        },
-        #exclude : {
-            #packages: [ 'SmalltalkTestGrinderTempClasses' ],
-            #categories: [ 'SmalltalkTestGrinder-Tests-Helpers' ]
-        },
         #coverage : {
-            #packages : [ 'SmalltalkTestGrinder*' ]
+            #packages : [ 'SmalltalkTestGrinder-Core*' ]
         }
     }
 }
