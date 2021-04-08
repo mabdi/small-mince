@@ -11,6 +11,9 @@ SmalltalkCISpec {
         #include : {
             #packages : [ 'TestGrinder-Tests*' ]
         },
+        #exclude : {
+            #packages: [ 'TestGrinderTempClasses' ]
+        },
         #coverage : {
             #packages : [ 'TestGrinder*' ]
         }
