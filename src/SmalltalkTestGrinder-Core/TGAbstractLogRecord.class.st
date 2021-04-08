@@ -36,7 +36,10 @@ TGAbstractLogRecord >> captureLocals [
 	[ cntx receiver tg_internal_class] 
 		whileTrue: [ cntx := cntx sender].
 	^ (cntx tempNames collect: [ :key | 
-			key -> ((cntx tempNamed: key) tg_valueReference) ]
+			| v |
+			v := (cntx tempNamed: key).
+			[key -> (v tg_valueReference)]
+			on: Error do: [ key -> (TGSkippedValue with: v) ] ]
 		) asDictionary
 ]
 
