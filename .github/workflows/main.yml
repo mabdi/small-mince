@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest]
         smalltalk:
-          - Pharo64-9.0
+          -  Pharo64-stable
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.smalltalk }} on ${{ matrix.os }}
     env:
