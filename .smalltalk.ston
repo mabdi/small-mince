@@ -3,6 +3,7 @@ SmalltalkCISpec {
         SCIMetacelloLoadSpec {
             #baseline : 'TestGrinder',
             #directory : 'src',
+            #load : [ 'tests' ],
             #platforms : [ #pharo ]
         }
     ],
