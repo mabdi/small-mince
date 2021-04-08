@@ -1,7 +1,7 @@
 SmalltalkCISpec {
     #loading : [
         SCIMetacelloLoadSpec {
-            #baseline : 'TestGrinder',
+            #baseline : 'SmalltalkTestGrinder',
             #directory : 'src',
             #load : [ 'tests' ],
             #platforms : [ #pharo ]
@@ -9,13 +9,14 @@ SmalltalkCISpec {
     ],
     #testing : {
         #include : {
-            #packages : [ 'TestGrinder-Tests*' ]
+            #packages : [ 'SmalltalkTestGrinder-Tests*' ]
         },
         #exclude : {
-            #packages: [ 'TestGrinderTempClasses' ]
+            #packages: [ 'SmalltalkTestGrinderTempClasses' ],
+            #categories: [ 'SmalltalkTestGrinder-Tests-Helpers' ]
         },
         #coverage : {
-            #packages : [ 'TestGrinder*' ]
+            #packages : [ 'SmalltalkTestGrinder*' ]
         }
     }
 }
