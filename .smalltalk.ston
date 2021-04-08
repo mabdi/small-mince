@@ -12,7 +12,8 @@ SmalltalkCISpec {
             #packages : [ 'SmalltalkTestGrinder-Tests*' ]
         },
         #exclude : {
-            #packages: [ 'SmalltalkTestGrinderTempClasses' ]
+            #packages: [ 'SmalltalkTestGrinderTempClasses' ],
+            #categories: [ 'SmalltalkTestGrinder-Tests-Helpers' ]
         },
         #coverage : {
             #packages : [ 'SmalltalkTestGrinder*' ]
