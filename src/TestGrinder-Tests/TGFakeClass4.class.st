@@ -18,7 +18,7 @@ TGFakeClass4 >> brances [
 
 { #category : #'as yet unclassified' }
 TGFakeClass4 >> doSomething [ 
-	^ 1 + result
+	^ 2 + result
 ]
 
 { #category : #'as yet unclassified' }
