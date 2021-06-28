@@ -48,8 +48,8 @@ SMProxy >> gtDisplayString [
 
 { #category : #'reflective operations' }
 SMProxy >> initializeOn: aCompiledMethod action: anObject [
-	aCompiledMethod class = CompiledMethod
-		ifFalse: [ Error new signal: 'cannot install proxy on other object' ].
+	"aCompiledMethod class = CompiledMethod
+		ifFalse: [ Error new signal: 'cannot install proxy on other object' ]."
 	action := anObject.
 	method := aCompiledMethod
 ]
