@@ -97,7 +97,7 @@ SMTracer >> installProxyOn: aMethod [
 
 { #category : #'as yet unclassified' }
 SMTracer >> isItSafeToProxyTo: aMethod [
-	(aMethod selector beginsWith: 'tg_') 
+	(aMethod selector beginsWith: 'sm_') 
 		ifTrue: [ ^ false ].
 	({#initialization} includes: aMethod protocol)
 		ifTrue: [ ^ false ].

@@ -43,7 +43,7 @@ SMProxy >> doesNotUnderstand: aMessage [
 
 { #category : #'reflective operations' }
 SMProxy >> gtDisplayString [
-	^ 'TGProxy'
+	^ 'SMProxy'
 ]
 
 { #category : #'reflective operations' }
@@ -71,7 +71,7 @@ SMProxy >> method [
 
 { #category : #'reflective operations' }
 SMProxy >> printOn: aStream [
-	aStream nextPutAll: 'TGProxy'
+	aStream nextPutAll: 'SMProxy'
 ]
 
 { #category : #evaluation }

@@ -36,10 +36,7 @@ SMAbstractLogRecord >> captureLocals [
 	[ cntx receiver sm_internal_class] 
 		whileTrue: [ cntx := cntx sender].
 	^ (cntx tempNames collect: [ :key | 
-			| v |
-			v := (cntx tempNamed: key).
-			[key -> (v sm_valueReference)]
-			on: Error do: [ key -> (SMSkippedValue with: v) ] ]
+			key -> ((cntx tempNamed: key) sm_valueReference) ]
 		) asDictionary
 ]
 
