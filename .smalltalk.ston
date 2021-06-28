@@ -1,7 +1,7 @@
 SmalltalkCISpec {
     #loading : [
         SCIMetacelloLoadSpec {
-            #baseline : 'SmalltalkTestGrinder',
+            #baseline : 'SmallMince',
             #directory : 'src',
             #load : [ 'tests' ],
             #platforms : [ #pharo ]
@@ -10,7 +10,7 @@ SmalltalkCISpec {
     #preTesting : 'scripts/preTesting.st',
     #testing : {
         #coverage : {
-            #packages : [ 'SmalltalkTestGrinder-Core*' ]
+            #packages : [ 'SmallMince-Core*' ]
         }
     }
 }
