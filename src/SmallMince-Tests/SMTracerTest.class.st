@@ -11,7 +11,7 @@ Class {
 SMTracerTest >> testTrace1 [
 	| obs |
 	obs := SMTracer new 
-		config: nil;
+		
 		captureTargets: { SMFakeClass1 };
 		executableCode: [SMFakeClass1 new sum: 100; sum: 10].
 	obs run.
@@ -27,7 +27,6 @@ SMTracerTest >> testTrace1 [
 SMTracerTest >> testTrace2 [
 	| obs rec |
 	obs := SMTracer new
-		config: nil;
 		captureTargets:
 			{SMFakeClass1.
 			SMFakeClass2.

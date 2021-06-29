@@ -10,7 +10,6 @@ Class {
 { #category : #'as yet unclassified' }
 SMMethodBasedFocusedTestsStrategyTest >> getTrace [
 	^ SMTracer new
-		config: nil;
 		captureTargets:
 			{SMFakeClass1.
 			SMFakeClass2.

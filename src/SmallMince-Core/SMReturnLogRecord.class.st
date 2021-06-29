@@ -14,7 +14,7 @@ SMReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aVa
 	state := self captureState: aReceiver.
 	locals := self captureLocals.
 	arguments := self captureArgsState: anArgs.
-	returnValue := aValue sm_valueReference.
+	self returnValue: aValue sm_valueReference.
 ]
 
 { #category : #testing }

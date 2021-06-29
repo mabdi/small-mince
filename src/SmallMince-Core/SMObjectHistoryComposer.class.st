@@ -4,7 +4,6 @@ Class {
 	#traits : 'SMInternalClassesTrait',
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
-		'config',
 		'records',
 		'theClass',
 		'theMethod',
@@ -28,16 +27,6 @@ SMObjectHistoryComposer >> addAllEventsForObject: obj [
 		 ].
 	obj setInitializeDone.
 	dependencies addAll: (obj dependsOn collect: [ :objRef | SMObjectHistory new objectReference: objRef ])
-]
-
-{ #category : #accessing }
-SMObjectHistoryComposer >> config [
-	^ config
-]
-
-{ #category : #accessing }
-SMObjectHistoryComposer >> config: anObject [
-	config := anObject
 ]
 
 { #category : #accessing }

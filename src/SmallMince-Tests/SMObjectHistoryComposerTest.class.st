@@ -7,11 +7,6 @@ Class {
 	#category : #'SmallMince-Tests-3.Preparation'
 }
 
-{ #category : #accessing }
-SMObjectHistoryComposerTest >> config [
-	^ self
-]
-
 { #category : #testing }
 SMObjectHistoryComposerTest >> expectedFailures [ 
 	^ #(testN3)
@@ -21,14 +16,12 @@ SMObjectHistoryComposerTest >> expectedFailures [
 SMObjectHistoryComposerTest >> testN1 [
 	| obs comp histories |
 	obs := SMTracer new 
-		config: self config;
 		captureTargets: { SMFakeClass1 };
 		executableCode: [ |x1 x2 x3| x1 := SMFakeClass1 new sum: 100; balance.
 			x2 := SMFakeClass1 new balance.
 			x3 := SMFakeClass1 new balance; sum: 10; sum: 10;balance; balance;sum: 10].
 	obs run.
 	comp := SMObjectHistoryComposer new 
-		config: self config; 
 		theClass: SMFakeClass1; 
 		theMethod: #sum:; 
 		records: obs records.
@@ -50,12 +43,10 @@ SMObjectHistoryComposerTest >> testN1 [
 SMObjectHistoryComposerTest >> testN2 [
 	| obs comp histories |
 	obs := SMTracer new 
-		config: self config;
 		captureTargets: { SMFakeClass1 . SMFakeClass2};
 		executableCode: [ |x| x := SMFakeClass1 new. SMFakeClass2 new addHundred: x].
 	obs run.
 	comp := SMObjectHistoryComposer new 
-		config: self config; 
 		theClass: SMFakeClass2; 
 		theMethod: #addHundred:; 
 		records: obs records.

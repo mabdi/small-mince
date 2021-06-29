@@ -4,10 +4,8 @@ Class {
 	#traits : 'SMInternalClassesTrait',
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
-		'config',
 		'executableCode',
 		'captureTargets',
-		'observationTargets',
 		'coverage',
 		'observations',
 		'records'
@@ -47,16 +45,6 @@ SMTracer >> captureTargets: anObject [
 ]
 
 { #category : #accessing }
-SMTracer >> config [
-	^ config
-]
-
-{ #category : #accessing }
-SMTracer >> config: anObject [
-	config := anObject
-]
-
-{ #category : #accessing }
 SMTracer >> executableCode [
 	^ executableCode
 ]
@@ -74,10 +62,10 @@ SMTracer >> initialize [
 { #category : #'as yet unclassified' }
 SMTracer >> installObservers [
 	| allsubs |
-	allsubs := captureTargets flatCollect: [ :cls | cls allSubclasses ].
-	(captureTargets difference: allsubs asSet)
+	allsubs := self captureTargets flatCollect: [ :cls | cls allSubclasses ].
+	(self captureTargets difference: allsubs asSet)
 		do: [ :aClass | self addStateInstanceVariable: aClass ].
-	captureTargets do: [ :cls | self installObserversFor: cls ].
+	self captureTargets do: [ :cls | self installObserversFor: cls ].
 
 ]
 
@@ -102,16 +90,6 @@ SMTracer >> isItSafeToProxyTo: aMethod [
 	({#initialization} includes: aMethod protocol)
 		ifTrue: [ ^ false ].
 	^ true
-]
-
-{ #category : #accessing }
-SMTracer >> observationTargets [
-	^ observationTargets
-]
-
-{ #category : #accessing }
-SMTracer >> observationTargets: anObject [
-	observationTargets := anObject
 ]
 
 { #category : #'as yet unclassified' }

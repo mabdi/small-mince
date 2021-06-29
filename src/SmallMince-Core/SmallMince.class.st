@@ -59,8 +59,8 @@ SmallMince >> executableCode: anObject [
 SmallMince >> run [
 	| traces testMethodModels generatedTests | 
 	traces := SMTracer new
-		captureTargets: classesToObserve;
-		executableCode: executableCode;
+		captureTargets: self classesToObserve;
+		executableCode: self executableCode;
 		run;
 		records.
 	testMethodModels := self strategy 
