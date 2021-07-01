@@ -8,20 +8,31 @@ Class {
 }
 
 { #category : #test }
+SMAbstractValueTest >> testBlock [
+	| m m2 val oldVal |
+	val := [ :x | x + 1 ].
+	m := val sm_valueReference.
+	self assert: m theASTNode equals: [ :x | x + 1 ] sourceNode.
+	self deny: m copy identicalTo: m.
+	oldVal := val.
+	val := [ :y | y + 2 ].
+	m2 := val sm_valueReference.
+	self assert: m2 theASTNode equals: val sourceNode.
+	self deny: m2 theASTNode equals: oldVal sourceNode
+]
+
+{ #category : #test }
 SMAbstractValueTest >> testCloneBoolean [
 	| m m2 val oldVal |
 	val := true.
 	m := val sm_valueReference.
 	self assert: m theValue equals: val.
-	self deny: m clone == m.
+	self deny: m copy identicalTo: m.
 	oldVal := val.
 	val := false.
 	m2 := val sm_valueReference.
 	self assert: m2 theValue equals: val.
-	self deny: m2 theValue equals: oldVal.
-
-	
-	
+	self deny: m2 theValue equals: oldVal
 ]
 
 { #category : #test }
@@ -31,8 +42,7 @@ SMAbstractValueTest >> testCloneClass [
 	m := val sm_valueReference.
 	self assert: m theValue equals: val.
 	self assert: m theClass equals: val class.
-	self deny: m clone == m.
-	
+	self deny: m copy identicalTo: m
 ]
 
 { #category : #test }
@@ -53,15 +63,12 @@ SMAbstractValueTest >> testCloneInteger [
 	val := 10.
 	m := val sm_valueReference.
 	self assert: m theValue equals: val.
-	self deny: m clone == m.
+	self deny: m copy identicalTo: m.
 	oldVal := val.
 	val := 11.
 	m2 := val sm_valueReference.
 	self assert: m2 theValue equals: val.
-	self deny: m2 theValue equals: oldVal.
-
-	
-	
+	self deny: m2 theValue equals: oldVal
 ]
 
 { #category : #test }
@@ -96,13 +103,10 @@ SMAbstractValueTest >> testCloneString [
 	val := 'abcd'.
 	m := val sm_valueReference.
 	self assert: m theValue equals: val.
-	self deny: m clone == m.
+	self deny: m copy identicalTo: m.
 	oldVal := val.
 	val := 'abcde'.
 	m2 := val sm_valueReference.
 	self assert: m2 theValue equals: val.
-	self deny: m2 theValue equals: oldVal.
-
-	
-	
+	self deny: m2 theValue equals: oldVal
 ]

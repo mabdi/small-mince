@@ -23,13 +23,13 @@ SMMethodBasedFocusedTestsStrategy >> composeClasses [
 { #category : #'as yet unclassified' }
 SMMethodBasedFocusedTestsStrategy >> composeForMethod: aSelector inClass: aClass [
 	| records |
-	records := (traces select: #isCall) select: [ :rec | 
-		rec selector = aSelector and: [ aClass = rec receiver theClass] ].
-	
-	^ SMObjectHistoryComposer new 
-		theClass: aClass; 
-		records: records ;
-		run.
+	records := (self traces select: #isCall)
+		select:
+			[ :rec | rec selector = aSelector and: [ aClass = rec receiver theClass ] ].
+	^ SMObjectHistoryComposer new
+		theClass: aClass;
+		records: records;
+		run
 ]
 
 { #category : #'as yet unclassified' }

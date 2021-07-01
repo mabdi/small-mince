@@ -12,7 +12,7 @@ SMMinceStrategy >> composeClasses [
 	| myTraces uids records objectComposed |
 	self classesUnderTest
 		do: [ :cls | 
-			myTraces := traces select: [ :x | x receiver theClass = cls ].
+			myTraces := self traces select: [ :x | x receiver theClass = cls ].
 			uids := (myTraces collect: [ :x | x receiver uniqueId ])
 				removeDuplicates.
 			objectComposed := uids

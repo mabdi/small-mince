@@ -9,12 +9,12 @@ Class {
 
 { #category : #'as yet unclassified' }
 SMReturnLogRecord >> for: aReceiver selector: aSelector args: anArgs result: aValue [
-	receiver := aReceiver sm_valueReference.
-	selector := aSelector.
-	state := self captureState: aReceiver.
-	locals := self captureLocals.
-	arguments := self captureArgsState: anArgs.
-	self returnValue: aValue sm_valueReference.
+	self receiver: aReceiver sm_valueReference.
+	self selector: aSelector.
+	self state: (self captureState: aReceiver).
+	self locals: self captureLocals.
+	self arguments: (self captureArgsState: anArgs).
+	self returnValue: aValue sm_valueReference
 ]
 
 { #category : #testing }
