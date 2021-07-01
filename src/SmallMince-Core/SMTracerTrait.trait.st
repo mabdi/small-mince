@@ -17,6 +17,12 @@ SMTracerTrait classSide >> state_variable_name [
 ]
 
 { #category : #'as yet unclassified' }
+SMTracerTrait >> sm_objectStack [
+	self sm_state_init.
+	^ tg_state stack
+]
+
+{ #category : #'as yet unclassified' }
 SMTracerTrait >> sm_state_init [
 	tg_state ifNil: [ tg_state := SMObjectReference with: self ]
 ]

@@ -3,7 +3,8 @@ Class {
 	#superclass : #SMAbstractValue,
 	#instVars : [
 		'uniqueId',
-		'lastRecordId'
+		'lastRecordId',
+		'stack'
 	],
 	#category : #'SmallMince-Core-Model'
 }
@@ -51,6 +52,12 @@ SMObjectReference >> lastRecordId [
 { #category : #accessing }
 SMObjectReference >> lastRecordId: anObject [
 	lastRecordId := anObject
+]
+
+{ #category : #accessing }
+SMObjectReference >> stack [
+	stack ifNil: [ stack := Stack new ].
+	^ stack
 ]
 
 { #category : #'as yet unclassified' }

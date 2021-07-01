@@ -85,21 +85,42 @@ SMTracer >> installProxyOn: aMethod [
 
 { #category : #'as yet unclassified' }
 SMTracer >> isItSafeToProxyTo: aMethod [
-	(aMethod selector beginsWith: 'sm_') 
+	(aMethod selector beginsWith: 'sm_')
 		ifTrue: [ ^ false ].
-	({#initialization} includes: aMethod protocol)
+	({"#initialization"} includes: aMethod protocol)
 		ifTrue: [ ^ false ].
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SMTracer >> postCall: selector with: args in: aReceiver result: result [
-	| id record |
+SMTracer >> postCall: selector with: args in: aReceiver exception: exception [
+	| id record old_selector |
+	old_selector := aReceiver sm_objectStack pop.
+	old_selector = selector
+		ifFalse: [ self error: 'Fatal Error' ].
+	aReceiver sm_objectStack ifNotEmpty: [ ^ self ].
+	
 	record := SMReturnLogRecord new
 		for: aReceiver
 		selector: selector
 		args: args
-		result: result .
+		result: nil.
+	id := self recordLog: record.
+	aReceiver sm_state_updateId: id
+]
+
+{ #category : #'as yet unclassified' }
+SMTracer >> postCall: selector with: args in: aReceiver result: result [
+	| id record old_selector |
+	old_selector := aReceiver sm_objectStack pop.
+	old_selector = selector
+		ifFalse: [ self error: 'Fatal Error' ].
+	aReceiver sm_objectStack ifNotEmpty: [^ self].
+	record := SMReturnLogRecord new
+		for: aReceiver
+		selector: selector
+		args: args
+		result: result.
 	id := self recordLog: record.
 	aReceiver sm_state_updateId: id
 ]
@@ -107,6 +128,9 @@ SMTracer >> postCall: selector with: args in: aReceiver result: result [
 { #category : #'as yet unclassified' }
 SMTracer >> preCall: selector with: args in: aReceiver [
 	| id record |
+	aReceiver sm_objectStack push: selector.
+	aReceiver sm_objectStack size > 1
+		ifTrue: [ ^ self ].
 	record := SMCallLogRecord new
 		for: aReceiver
 		selector: selector

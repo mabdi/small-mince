@@ -67,6 +67,11 @@ SMAbstractLogRecord >> isCall [
 ]
 
 { #category : #testing }
+SMAbstractLogRecord >> isException [
+	^ false
+]
+
+{ #category : #testing }
 SMAbstractLogRecord >> isReturn [
 	^ false
 ]

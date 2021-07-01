@@ -80,7 +80,13 @@ SMProxy >> run: aSelector with: anArray in: aReceiver [
 	action preCall: aSelector with: anArray in: aReceiver.
 	[ result := aReceiver withArgs: anArray executeMethod: method ]
 		on: Error
-		do: [ :x | (':' join: {'Error'. x class name}) traceCr  ].
+		do: [ :x | 
+			action
+				postCall: aSelector
+				with: anArray
+				in: aReceiver
+				exception: x.
+			x signal ].
 	action
 		postCall: aSelector
 		with: anArray
