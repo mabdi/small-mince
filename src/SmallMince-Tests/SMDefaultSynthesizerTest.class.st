@@ -125,6 +125,69 @@ SMDefaultSynthesizerTest >> testDictionaryPrimitive [
 ]
 
 { #category : #tests }
+SMDefaultSynthesizerTest >> testFakeHttp [
+	| value res expected obs records comp objectUnderTest nameMapping synthesizer |
+	obs := SMTracer new
+		captureTargets:
+			{SMFakeHttpAgent.
+			SMFakeMethod.
+			SMFakeProtocol.
+			SMFakeUrl};
+		executableCode: [ SMFakeHttpAgent runExample ].
+	obs run.
+	records := obs records.
+	nameMapping := Dictionary new.
+	nameMapping
+		at:
+			(records detect: [ :r | r receiver theClass = SMFakeHttpAgent ])
+				receiver uniqueId
+		put: 'var_1'.
+	nameMapping
+		at:
+			(records detect: [ :r | r receiver theClass = SMFakeUrl ]) receiver
+				uniqueId
+		put: 'var_2'.
+	nameMapping
+		at:
+			(records detect: [ :r | r receiver theClass = SMFakeMethod ]) receiver
+				uniqueId
+		put: 'var_3'.
+	nameMapping
+		at:
+			(records detect: [ :r | r receiver theClass = SMFakeProtocol ])
+				receiver uniqueId
+		put: 'var_4'.
+	comp := SMObjectHistoryComposer new
+		theClass: SMFakeHttpAgent;
+		records: records.
+	comp run.
+	objectUnderTest := comp objectHistories
+		detect: [ :x | x objectReference theClass = SMFakeHttpAgent ].
+	value := SMTestMethod new
+		methodName: #testTest;
+		objectUnderTest: objectUnderTest.
+	synthesizer := self getSynthesizer.
+	synthesizer varNameMapper: nameMapping.
+	res := value synthesisBy: synthesizer.
+	expected := RBParser
+		parseMethod:
+			'testTest
+	| var_1 |
+	var_1 := SMFakeHttpAgent new.
+	var_2 := SMFakeUrl new.
+	var_2 url: ''google.com''.
+	var_4 := SMFakeProtocol new.
+	var_4 protocol: ''https''.
+	var_2 protocol: var_4.
+	var_1 url: var_2.
+	var_3 := SMFakeMethod new.
+	var_3 method: #GET.
+	var_1 method: var_3.
+	var_1 execute'.
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
 SMDefaultSynthesizerTest >> testFloat [
 	| res expected |
 	res := 3.14 sm_valueReference synthesisBy: self getSynthesizer.
