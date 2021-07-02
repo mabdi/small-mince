@@ -146,24 +146,21 @@ SMDefaultSynthesizer >> synthesisObjectErrorEvent: anObjectEvent [
 	args := anObjectEvent argsBefore
 		collect: [ :arg | arg synthesisBy: self ].
 	^ RBMessageNode
-	receiver:
-		(RBBlockNode
-			body:
-				(RBSequenceNode
-					statements:
-						{(RBMessageNode
-		receiver: (self genVariableFor: anObjectEvent parent objectReference)
-		selector: anObjectEvent selector
-		arguments: args)}))
-	selector: #on:do:
-	arguments:
-		{(RBGlobalNode named: #Error).
-		(RBBlockNode
-			arguments: {(RBArgumentNode named: #sm_error)}
-			body: (RBSequenceNode statements: {}))}.
-	
-	
-	
+		receiver:
+			(RBBlockNode
+				body:
+					(RBSequenceNode
+						statements:
+							{(RBMessageNode
+								receiver: (self genVariableFor: anObjectEvent parent objectReference)
+								selector: anObjectEvent selector
+								arguments: args)}))
+		selector: #on:do:
+		arguments:
+			{(RBGlobalNode named: anObjectEvent exceptionValue theClass name ).
+			(RBBlockNode
+				arguments: {(RBArgumentNode named: #sm_error)}
+				body: (RBSequenceNode statements: {}))}
 ]
 
 { #category : #'as yet unclassified' }

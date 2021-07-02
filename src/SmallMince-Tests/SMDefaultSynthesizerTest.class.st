@@ -10,30 +10,30 @@ Class {
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genEvent1 [
 	| ev |
-	ev := SMObjectAbstractEvent new.
+	ev := SMObjectReturnEvent new.
 	ev selector: #sum:.
-	ev stateBefore: {  }.
-	ev stateAfter: {  }.
-	ev argsBefore: { 10 sm_valueReference }.
-	ev argsAfter: {  }.
+	ev stateBefore: {}.
+	ev stateAfter: {}.
+	ev argsBefore: {10 sm_valueReference}.
+	ev argsAfter: {}.
 	^ ev
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genEvent2 [
 	| evs ev objRef |
-	objRef := SMObjectReference new 
+	objRef := SMObjectReference new
 		theClass: SMFakeClass1;
-		lastRecordId: -1; 
-		uniqueId: 99; 
+		lastRecordId: -1;
+		uniqueId: 99;
 		yourself.
 	evs := OrderedCollection new.
-	ev := SMObjectAbstractEvent new.
+	ev := SMObjectReturnEvent new.
 	ev selector: #addHundred:.
-	ev stateBefore: {  }.
-	ev stateAfter: {  }.
-	ev argsBefore: { objRef }.
-	ev argsAfter: {  }.
+	ev stateBefore: {}.
+	ev stateAfter: {}.
+	ev argsBefore: {objRef}.
+	ev argsAfter: {}.
 	evs add: ev.
 	^ evs
 ]
