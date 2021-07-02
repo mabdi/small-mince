@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genEvent1 [
 	| ev |
-	ev := SMObjectEvent new.
+	ev := SMObjectAbstractEvent new.
 	ev selector: #sum:.
 	ev stateBefore: {  }.
 	ev stateAfter: {  }.
@@ -28,7 +28,7 @@ SMDefaultSynthesizerTest >> genEvent2 [
 		uniqueId: 99; 
 		yourself.
 	evs := OrderedCollection new.
-	ev := SMObjectEvent new.
+	ev := SMObjectAbstractEvent new.
 	ev selector: #addHundred:.
 	ev stateBefore: {  }.
 	ev stateAfter: {  }.

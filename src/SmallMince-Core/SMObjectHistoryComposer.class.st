@@ -27,10 +27,10 @@ SMObjectHistoryComposer >> addAllEventsForObject: obj [
 					r2 selector = r selector
 						ifFalse: [ self error: 'something is wrong here!' ] ].
 			stack
-				ifEmpty: [ 
-					r isReturn ifTrue: [ obj addEvent: (SMObjectEvent forCall: r2 return: r) ].
-					r isException  ifTrue: [ obj addEvent: (SMObjectEvent forCall: r2 return: r) ]
-					 ] ].
+				ifEmpty: [ r isReturn
+						ifTrue: [ obj addEvent: (SMObjectReturnEvent forCall: r2 return: r) ].
+					r isException
+						ifTrue: [ obj addEvent: (SMObjectExceptionEvent forCall: r2 exception: r) ] ] ].
 	obj setInitializeDone.
 	dependencies
 		addAll:

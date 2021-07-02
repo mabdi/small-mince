@@ -131,3 +131,29 @@ SMObjectHistoryComposerTest >> testN3 [
 	self assert: comp dependencies asOrderedCollection first objectReference uniqueId equals: histories first events first argsBefore first uniqueId.
 	self assert: histories first events first argsAfter first uniqueId equals: histories first events first argsBefore first uniqueId.
 ]
+
+{ #category : #tests }
+SMObjectHistoryComposerTest >> testNException [
+	| obs comp histories records history |
+	obs := SMTracer new
+		captureTargets: {SMFakeClassException};
+		executableCode: [ SMFakeClassException runExample ].
+	obs run.
+	records := obs records.
+	comp := SMObjectHistoryComposer new
+		theClass: SMFakeClassException;
+		records: records.
+	comp run.
+	histories := comp objectHistories asOrderedCollection.
+	self assert: histories size equals: 1.
+	history := histories first.
+	self
+		assert: history objectReference theClass
+		equals: SMFakeClassException.
+	self assert: history events size equals: 2.
+	self
+		assert: history events first class equals: SMObjectReturnEvent.
+	self
+		assert:  history events second class equals: SMObjectExceptionEvent.
+	
+]
