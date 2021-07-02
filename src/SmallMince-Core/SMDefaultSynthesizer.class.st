@@ -2,7 +2,8 @@ Class {
 	#name : #SMDefaultSynthesizer,
 	#superclass : #SMAbstractMethodSynthesizer,
 	#instVars : [
-		'varNameMapper'
+		'varNameMapper',
+		'tmps'
 	],
 	#category : #'SmallMince-Core-4.Synthesis'
 }
@@ -41,9 +42,16 @@ SMDefaultSynthesizer >> genVariableFor: anObject [
 	^ RBVariableNode named: (self variableNameMapping: anObject uniqueId)
 ]
 
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> getATempVariable [
+	tmps := tmps + 1.
+	^ RBVariableNode named: ('tmp_', tmps asString )
+]
+
 { #category : #initialization }
 SMDefaultSynthesizer >> initialize [
-	varNameMapper := Dictionary new
+	varNameMapper := Dictionary new.
+	tmps := 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,150 +61,196 @@ SMDefaultSynthesizer >> synthesisBlockValue: anObject [
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisClassPrimitiveValue: anObject [
-	^ RBVariableNode named: anObject theValue name
+	^ (RBVariableNode named: anObject theValue name)
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisDictionaryValue: anObject [
-	anObject theValues isEmpty 
+	anObject theValues isEmpty
 		ifTrue: [ ^ self synthesisDictionaryValueEmpty: anObject ].
-	anObject areAllPrimitive 
-		ifTrue: [ ^ self synthesisDictionaryValueCascade: anObject  ] 
-		ifFalse: [ ^ self synthesisDictionaryValueCascadeDependency: anObject  ] 
+	^ self synthesisDictionaryValueNonEmpty: anObject.
+	
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisDictionaryValueCascade: anObject [
 	| receiver msgs |
+	self flag: #todo. "dont use cascade"
 	receiver := self genCallNew: #Dictionary.
 	msgs := OrderedCollection new.
-	anObject theValues keysAndValuesDo: [:k :v | msgs add: (RBMessageNode
-			receiver: receiver copy				
-			selector: #at:put:
-			arguments:
-				{(RBLiteralValueNode value: k).
-				v synthesisBy: self}) ].
-	msgs add: (RBMessageNode
-			receiver: receiver copy				
-			selector: #yourself
-			arguments: {}).		
-	^ RBCascadeNode
-	messages: msgs. 
-]
-
-{ #category : #'as yet unclassified' }
-SMDefaultSynthesizer >> synthesisDictionaryValueCascadeDependency: anObject [
-	| receiver msgs |
-	self flag: #TODO
+	anObject theValues
+		keysAndValuesDo: [ :k :v | 
+			msgs
+				add:
+					(RBMessageNode
+						receiver: receiver copy
+						selector: #at:put:
+						arguments:
+							{(RBLiteralValueNode value: k).
+							(v synthesisBy: self)}) ].
+	msgs
+		add:
+			(RBMessageNode
+				receiver: receiver copy
+				selector: #yourself
+				arguments: {}).
+	^ {(RBCascadeNode messages: msgs)}
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisDictionaryValueEmpty: anObject [
-	^ self genCallNew: #Dictionary
+	^ {self genCallNew: #Dictionary}
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> synthesisDictionaryValueNonEmpty: anObject [
+	| receiver statements |
+	statements := OrderedCollection new.
+	receiver := self getATempVariable.
+	statements
+		add:
+			(self
+				genAssgnmentNode: (self genCallNew: #Dictionary)
+				toVariableNode: receiver).
+	anObject theValues
+		keysAndValuesDo: [ :k :v | 
+			| node val |
+			node := v synthesisBy: self.
+			node isSequence
+				ifTrue: [ val := node statements last.
+					node removeNode: val.
+					statements addAll: node statements ]
+				ifFalse: [ val := node ].
+			statements
+				add:
+					(RBMessageNode
+						receiver: receiver copy
+						selector: #at:put:
+						arguments:
+							{(RBLiteralValueNode value: k).
+							(val)}) ].
+	statements add: receiver.	"It's a contract between methods in this synthesizer: if the type is a sequence, the last statement refers the variable"
+	^ RBSequenceNode statements: statements
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisFractionValue: anObject [
-	^ self genLiteralFromString: anObject theValue
+	^ (self genLiteralFromString: anObject theValue)
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisListValue: anObject [
-	anObject theValues ifEmpty: [ ^ self synthesisListValueEmpty: anObject ].
-	anObject areAllPrimitive 
-		ifTrue: [ ^ self synthesisListValuePrimitive: anObject ]
-		ifFalse: [ ^ self synthesisListValuePrimitiveDependencies: anObject ]
+	anObject theValues
+		ifEmpty: [ ^ self synthesisListValueEmpty: anObject ].
+	^ self synthesisListValueNonEmpty: anObject
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisListValueEmpty: anObject [
-	^ self genCallNew: anObject theClass name
+	^ (self genCallNew: anObject theClass name)
 ]
 
 { #category : #'as yet unclassified' }
-SMDefaultSynthesizer >> synthesisListValuePrimitive: anObject [
-	| receiver msgs |
-	receiver := self genCallNew: anObject theClass name.
-	msgs := anObject theValues asOrderedCollection collect: [ :v | RBMessageNode
-			receiver: receiver copy				
-			selector: #add:
-			arguments:
-				{v synthesisBy: self} ].
-	msgs add: (RBMessageNode
-			receiver: receiver copy				
-			selector: #yourself
-			arguments: {}).		
-	^ RBCascadeNode
-	messages: msgs. 
-]
-
-{ #category : #'as yet unclassified' }
-SMDefaultSynthesizer >> synthesisListValuePrimitiveDependencies: anObject [
-	self flag: #todo
+SMDefaultSynthesizer >> synthesisListValueNonEmpty: anObject [
+	| receiver statements |
+	statements := OrderedCollection new.
+	receiver := self getATempVariable.
+	statements
+		add:
+			(self
+				genAssgnmentNode: (self genCallNew: anObject theClass name)
+				toVariableNode: receiver).
+	anObject theValues asOrderedCollection
+		do: [ :v | 
+			| node val |
+			node := v synthesisBy: self.
+			node isSequence
+				ifTrue: [ val := node statements last.
+					node removeNode: val.
+					statements addAll: node statements ]
+				ifFalse: [ val := node ].
+			statements
+				add:
+					(RBMessageNode
+						receiver: receiver copy
+						selector: #add:
+						arguments: {val}) ].
+	statements add: receiver.	"It's a contract between methods in this synthesizer: if the type is a sequence, the last statement refers the variable"
+	^ RBSequenceNode statements: statements
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisNullValue: anObject [
-	^ RBLiteralValueNode value: nil
+	^ (RBLiteralValueNode value: nil)
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisObjectErrorEvent: anObjectEvent [
-	| args |
-	args := anObjectEvent argsBefore
-		collect: [ :arg | arg synthesisBy: self ].
-	^ RBMessageNode
-		receiver:
-			(RBBlockNode
-				body:
-					(RBSequenceNode
-						statements:
-							{(RBMessageNode
-								receiver: (self genVariableFor: anObjectEvent parent objectReference)
-								selector: anObjectEvent selector
-								arguments: args)}))
+	| call statements |
+	statements := self synthesisObjectReturnEvent: anObjectEvent.
+	call := statements statements last.
+	call := RBMessageNode
+		receiver: (RBBlockNode body: (RBSequenceNode statements: {call}))
 		selector: #on:do:
 		arguments:
-			{(RBGlobalNode named: anObjectEvent exceptionValue theClass name ).
+			{(RBGlobalNode named: anObjectEvent exceptionValue theClass name).
 			(RBBlockNode
 				arguments: {(RBArgumentNode named: #sm_error)}
-				body: (RBSequenceNode statements: {}))}
+				body: (RBSequenceNode statements: {}))}.
+	statements statements at: statements statements size put: call.
+	^ statements
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisObjectHistory: anObjectHistory [
 	| statements |
 	statements := OrderedCollection new.
-	statements add: (self genAssgnmentNode: (self genCallNew: anObjectHistory objectReference theClass name) 
-			toVariableNode: (self genVariableFor: anObjectHistory objectReference)).
-	statements addAll: (anObjectHistory selectedEvents collect: [:ev | ev synthesisBy: self]).
-	^ statements 
+	statements
+		add:
+			(self
+				genAssgnmentNode: (self genCallNew: anObjectHistory objectReference theClass name)
+				toVariableNode: (self genVariableFor: anObjectHistory objectReference)).
+	statements
+		addAll:
+			(anObjectHistory selectedEvents
+				flatCollect: [ :ev | (ev synthesisBy: self) statements ]).
+	^ statements
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisObjectReference: anObject [
-	^ RBVariableNode named: (self variableNameMapping: anObject uniqueId)
+	^ (RBVariableNode
+		named: (self variableNameMapping: anObject uniqueId))
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisObjectReturnEvent: anObjectEvent [
-	| args |
+	| args statements |
+	statements := OrderedCollection new.
 	args := anObjectEvent argsBefore
-		collect: [ :arg | arg synthesisBy: self ].
-	^ RBMessageNode
-		receiver: (self genVariableFor: anObjectEvent parent objectReference)
-		selector: anObjectEvent selector
-		arguments: args
+		collect: [ :arg | | node |
+			
+			node := arg synthesisBy: self.
+			node isSequence ifTrue: [ statements addAll: (node statements allButLast ) ] ifFalse: [ node ]
+			
+			 ].
+	statements
+		add:
+			(RBMessageNode
+				receiver: (self genVariableFor: anObjectEvent parent objectReference)
+				selector: anObjectEvent selector
+				arguments: args).
+	^ RBSequenceNode statements: statements
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisPrimitiveValue: anObject [
-	^ self genLiteral: anObject theValue
+	^ (self genLiteral: anObject theValue)
 ]
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisSkippedValue: anObject [
-	^ self genCallNew: anObject theClass name
+	^ (self genCallNew: anObject theClass name)
 ]
 
 { #category : #'as yet unclassified' }

@@ -21,11 +21,6 @@ SMListValue >> = anObject [
 	^ theValues = anObject theValues
 ]
 
-{ #category : #'as yet unclassified' }
-SMListValue >> areAllPrimitive [
-	^ theValues allSatisfy: #isTGPrimitive
-]
-
 { #category : #accessing }
 SMListValue >> copy [
 	| clone |

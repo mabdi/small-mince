@@ -73,7 +73,7 @@ SMDefaultSynthesizerTest >> getSynthesizer [
 SMDefaultSynthesizerTest >> testBlock [
 	| res expected value y |
 	y := 0.
-	value := [ :x | x + y + 1].
+	value := [ :x | x + y + 1 ].
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '[ :x | x + y + 1]'.
 	self assert: res equals: expected
@@ -93,16 +93,44 @@ SMDefaultSynthesizerTest >> testClass [
 	value := self class.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: self class name.
+	self assert: res  equals: expected
+]
+
+{ #category : #tests }
+SMDefaultSynthesizerTest >> testDictionaryDependency [
+	| res expected value dep1 dep2 |
+	dep1 := OrderedCollection with: #hey with: #hoy.
+	dep2 := Dictionary new
+		at: #hey put: #hoy;
+		yourself.
+	value := Dictionary new
+		at: #slot1 put: 1;
+		at: #slot2 put: dep1;
+		at: #slot3 put: dep2;
+		yourself.
+	res := value sm_valueReference synthesisBy: self getSynthesizer.
+	expected := RBParser
+		parseExpression:
+			'tmp_1 := Dictionary new.
+tmp_1 at: #slot1 put: 1.
+tmp_2 := OrderedCollection new.
+tmp_2 add: #hey.
+tmp_2 add: #hoy.
+tmp_1 at: #slot2 put: tmp_2.
+tmp_3 := Dictionary new.
+tmp_3 at: #hey put: #hoy.
+tmp_1 at: #slot3 put: tmp_3.
+tmp_1'.
 	self assert: res equals: expected
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testDictionaryEmpty [ 
+SMDefaultSynthesizerTest >> testDictionaryEmpty [
 	| res expected value |
 	value := Dictionary new.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'Dictionary new'.
-	self assert: res equals: expected
+	self assert: res first equals: expected
 ]
 
 { #category : #tests }
@@ -115,12 +143,12 @@ SMDefaultSynthesizerTest >> testDictionaryPrimitive [
 		at: #slot4 put: 'sss';
 		yourself.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
-	expected := RBParser parseExpression: 'Dictionary new
-		at: #slot1 put: 1;
-		at: #slot2 put: true;
-		at: #slot3 put: nil;
-		at: #slot4 put: ''sss'';
-		yourself'.
+	expected := RBParser parseExpression: 'tmp_1 := Dictionary new.
+tmp_1 at: #slot1 put: 1.
+tmp_1 at: #slot2 put: true.
+tmp_1 at: #slot3 put: nil.
+tmp_1 at: #slot4 put: ''sss''.
+tmp_1'.
 	self assert: res equals: expected
 ]
 
@@ -165,6 +193,8 @@ SMDefaultSynthesizerTest >> testFakeHttp [
 		detect: [ :x | x objectReference theClass = SMFakeHttpAgent ].
 	value := SMTestMethod new
 		methodName: #testTest;
+		dependencies: (comp objectHistories
+		reject: [ :x | x objectReference theClass = SMFakeHttpAgent ]);
 		objectUnderTest: objectUnderTest.
 	synthesizer := self getSynthesizer.
 	synthesizer varNameMapper: nameMapping.
@@ -198,10 +228,10 @@ SMDefaultSynthesizerTest >> testFloat [
 { #category : #tests }
 SMDefaultSynthesizerTest >> testFraction [
 	| res expected value |
-	value := 1/2.
+	value := 1 / 2.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '1/2'.
-	self assert: res equals: expected
+	self assert: res  equals: expected
 ]
 
 { #category : #tests }
@@ -223,57 +253,78 @@ SMDefaultSynthesizerTest >> testHistoryDependent [
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testInteger [ 
+SMDefaultSynthesizerTest >> testInteger [
 	| res expected |
 	res := 10 sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '10'.
+	self assert: res  equals: expected
+]
+
+{ #category : #tests }
+SMDefaultSynthesizerTest >> testListDependency [
+	| res expected value dep |
+	dep := OrderedCollection 
+		with: #hi with: #hoy
+		.
+	value := OrderedCollection with: 10 with: dep.
+	res := value sm_valueReference synthesisBy: self getSynthesizer.
+	expected := RBParser
+		parseExpression:
+			'tmp_1 := OrderedCollection new.
+tmp_1 add: 10.
+tmp_2 := OrderedCollection new.
+tmp_2 add: #hi.
+tmp_2 add: #hoy.
+tmp_1 add: tmp_2.
+tmp_1'.
 	self assert: res equals: expected
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testListEmpty [ 
+SMDefaultSynthesizerTest >> testListEmpty [
 	| res expected value |
 	value := OrderedCollection new.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'OrderedCollection new'.
-	self assert: res equals: expected.
-	
+	self assert: res  equals: expected.
 	value := Set new.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'Set new'.
-	self assert: res equals: expected.
-	
+	self assert: res  equals: expected.
 	value := Array new.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'Array new'.
-	self assert: res equals: expected
-	
+	self assert: res  equals: expected
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testListPrimitive [ 
+SMDefaultSynthesizerTest >> testListPrimitive [
 	| res expected value |
 	value := OrderedCollection with: 10 with: 29 with: true.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
-	expected := RBParser parseExpression: 'OrderedCollection new add: 10; add: 29; add: true; yourself'.
+	expected := RBParser
+		parseExpression:
+			'tmp_1 := OrderedCollection new.tmp_1 add: 10.tmp_1 add: 29.tmp_1 add: true.
+		tmp_1'.
 	self assert: res equals: expected.
-	
-	value := {45. false} asSet.
+	value := {45 . false} asSet.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
-	expected := { RBParser parseExpression: 'Set new add: false; add: 45; yourself'. 
-		RBParser parseExpression: 'Set new add: 45; add: false; yourself'}.
+	expected := {(RBParser
+		parseExpression: 'tmp_1 := Set new.tmp_1 add: false.tmp_1 add: 45. tmp_1').
+	(RBParser
+		parseExpression: 'tmp_1:= Set new.tmp_1 add: 45.tmp_1 add: false. tmp_1')}.
 	self assert: (expected includes: res).
-	
-	value := {10. 11. 12. 13}.
+	value := {10 . 11 . 12 . 13}.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
-	expected := RBParser parseExpression: 'Array new add: 10; add: 11; add:12; add:13; yourself'.
-	self assert: res equals: expected.
-	
+	expected := RBParser
+		parseExpression:
+			'tmp_1 := Array new. tmp_1 add: 10. tmp_1 add: 11.tmp_1 add:12.tmp_1 add:13.tmp_1'.
+	self assert: res  equals: expected.
 	value := #(10 11 12 13).
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
-	expected := RBParser parseExpression: 'Array new add: 10; add: 11; add:12; add:13; yourself'.
-	self assert: res equals: expected
-		
+	expected := RBParser
+		parseExpression: 'tmp_1 := Array new. tmp_1 add: 10.tmp_1 add: 11.tmp_1 add:12.tmp_1 add:13. tmp_1'.
+	self assert: res  equals: expected
 ]
 
 { #category : #tests }
@@ -318,20 +369,20 @@ SMDefaultSynthesizerTest >> testMethodException [
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testNull [ 
+SMDefaultSynthesizerTest >> testNull [
 	| res expected |
 	res := nil sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'nil'.
-	self assert: res equals: expected
+	self assert: res  equals: expected
 ]
 
 { #category : #tests }
-SMDefaultSynthesizerTest >> testSkipped [ 
+SMDefaultSynthesizerTest >> testSkipped [
 	| value res expected |
 	value := 10 @ 20 corner: 20 @ 20.
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: 'Rectangle new'.
-	self assert: res equals: expected
+	self assert: res  equals: expected
 ]
 
 { #category : #tests }
@@ -339,5 +390,5 @@ SMDefaultSynthesizerTest >> testString [
 	| res expected |
 	res := 'jjj' sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '''jjj'''.
-	self assert: res equals: expected
+	self assert: res  equals: expected
 ]
