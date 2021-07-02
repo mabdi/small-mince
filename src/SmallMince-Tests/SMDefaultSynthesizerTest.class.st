@@ -228,6 +228,33 @@ SMDefaultSynthesizerTest >> testMethod [
 ]
 
 { #category : #tests }
+SMDefaultSynthesizerTest >> testMethodException [
+	| value res expected obs rec records comp |
+	obs := SMTracer new
+		captureTargets: {SMFakeClassException};
+		executableCode: [ SMFakeClassException runExample ].
+	obs run.
+	records := obs records.
+	records do: [ :r | r receiver uniqueId: 201 ].
+	comp := SMObjectHistoryComposer new
+		theClass: SMFakeClassException;
+		records: records.
+	comp run.
+	value := SMTestMethod new
+		methodName: #testTest;
+		objectUnderTest: comp objectHistories asOrderedCollection first.
+	res := value synthesisBy: self getSynthesizer.
+	expected := RBParser
+		parseMethod:
+			'testTest
+	| var_201 |
+	var_201 := SMFakeClassException new.
+	var_201 notRaiseAnError.
+	[ var_201 raiseAnError ] on: Error do: [:sm_error | ]'.
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
 SMDefaultSynthesizerTest >> testNull [ 
 	| res expected |
 	res := nil sm_valueReference synthesisBy: self getSynthesizer.

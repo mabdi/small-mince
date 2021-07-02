@@ -155,5 +155,5 @@ SMObjectAbstractEvent >> stateBefore: anObject [
 
 { #category : #'as yet unclassified' }
 SMObjectAbstractEvent >> synthesisBy: aSynthesizer [
-	^ aSynthesizer synthesisObjectEvent: self
+	^ self subclassResponsibility 
 ]

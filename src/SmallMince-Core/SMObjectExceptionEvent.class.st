@@ -28,3 +28,8 @@ SMObjectExceptionEvent >> exceptionValue: anObject [
 SMObjectExceptionEvent >> isException [
 	^ true
 ]
+
+{ #category : #'as yet unclassified' }
+SMObjectExceptionEvent >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisObjectErrorEvent: self
+]

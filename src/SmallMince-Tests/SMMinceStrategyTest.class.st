@@ -62,16 +62,6 @@ SMMinceStrategyTest >> testComposedObjectsToTestModel [
 ]
 
 { #category : #test }
-SMMinceStrategyTest >> testMethodsForTestFrom [
-	| s cls |
-	s := SMMinceStrategy new.
-	cls := SMFakeClass2.
-	self
-		assertCollection: ((s methodsForTestFrom: cls) collect: #selector)
-		hasSameElements: #(addHundred: run getFake1)
-]
-
-{ #category : #test }
 SMMinceStrategyTest >> testPackageTests [
 	| traces s |
 	traces := self getTrace.

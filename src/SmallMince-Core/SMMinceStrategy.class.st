@@ -44,11 +44,6 @@ SMMinceStrategy >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SMMinceStrategy >> methodsForTestFrom: aClass [ 
-	^ aClass methods
-]
-
-{ #category : #'as yet unclassified' }
 SMMinceStrategy >> minimizeTests [
 	self flag: #TODO. "minimize"
 	"remove all state preserving events"

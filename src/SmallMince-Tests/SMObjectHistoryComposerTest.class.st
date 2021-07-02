@@ -151,9 +151,7 @@ SMObjectHistoryComposerTest >> testNException [
 		assert: history objectReference theClass
 		equals: SMFakeClassException.
 	self assert: history events size equals: 2.
+	self assert: history events first isReturn.
 	self
-		assert: history events first class equals: SMObjectReturnEvent.
-	self
-		assert:  history events second class equals: SMObjectExceptionEvent.
-	
+		assert: history events second isException
 ]

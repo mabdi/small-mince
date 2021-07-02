@@ -28,3 +28,8 @@ SMObjectReturnEvent >> returnValue [
 SMObjectReturnEvent >> returnValue: anObject [
 	returnValue := anObject
 ]
+
+{ #category : #'as yet unclassified' }
+SMObjectReturnEvent >> synthesisBy: aSynthesizer [
+	^ aSynthesizer synthesisObjectReturnEvent: self
+]

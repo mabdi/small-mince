@@ -32,8 +32,8 @@ SMAbstractMethodSynthesizer >> synthesisNullValue: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SMAbstractMethodSynthesizer >> synthesisObjectEvent: anObjectEvent [
-	^ self subclassResponsibility 
+SMAbstractMethodSynthesizer >> synthesisObjectErrorEvent: anObjectEvent [
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,6 +44,11 @@ SMAbstractMethodSynthesizer >> synthesisObjectHistory: anObjectHistory [
 { #category : #'as yet unclassified' }
 SMAbstractMethodSynthesizer >> synthesisObjectReference: anObject [
 	^ self subclassResponsibility 
+]
+
+{ #category : #'as yet unclassified' }
+SMAbstractMethodSynthesizer >> synthesisObjectReturnEvent: anObjectEvent [
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

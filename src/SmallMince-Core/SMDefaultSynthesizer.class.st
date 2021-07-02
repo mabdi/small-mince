@@ -141,13 +141,29 @@ SMDefaultSynthesizer >> synthesisNullValue: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SMDefaultSynthesizer >> synthesisObjectEvent: anObjectEvent [
+SMDefaultSynthesizer >> synthesisObjectErrorEvent: anObjectEvent [
 	| args |
-	args := anObjectEvent argsBefore collect: [ :arg | arg synthesisBy: self ].
+	args := anObjectEvent argsBefore
+		collect: [ :arg | arg synthesisBy: self ].
 	^ RBMessageNode
-			receiver: (self genVariableFor: anObjectEvent parent objectReference)				
-			selector: anObjectEvent selector
-			arguments: args
+	receiver:
+		(RBBlockNode
+			body:
+				(RBSequenceNode
+					statements:
+						{(RBMessageNode
+		receiver: (self genVariableFor: anObjectEvent parent objectReference)
+		selector: anObjectEvent selector
+		arguments: args)}))
+	selector: #on:do:
+	arguments:
+		{(RBGlobalNode named: #Error).
+		(RBBlockNode
+			arguments: {(RBArgumentNode named: #sm_error)}
+			body: (RBSequenceNode statements: {}))}.
+	
+	
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -163,6 +179,17 @@ SMDefaultSynthesizer >> synthesisObjectHistory: anObjectHistory [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisObjectReference: anObject [
 	^ RBVariableNode named: (self variableNameMapping: anObject uniqueId)
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> synthesisObjectReturnEvent: anObjectEvent [
+	| args |
+	args := anObjectEvent argsBefore
+		collect: [ :arg | arg synthesisBy: self ].
+	^ RBMessageNode
+		receiver: (self genVariableFor: anObjectEvent parent objectReference)
+		selector: anObjectEvent selector
+		arguments: args
 ]
 
 { #category : #'as yet unclassified' }
