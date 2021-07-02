@@ -99,12 +99,11 @@ SMTracer >> postCall: selector with: args in: aReceiver exception: exception [
 	old_selector = selector
 		ifFalse: [ self error: 'Fatal Error' ].
 	aReceiver sm_objectStack ifNotEmpty: [ ^ self ].
-	
-	record := SMReturnLogRecord new
+	record := SMExceptionLogRecord new
 		for: aReceiver
 		selector: selector
 		args: args
-		result: nil.
+		exception: exception.
 	id := self recordLog: record.
 	aReceiver sm_state_updateId: id
 ]

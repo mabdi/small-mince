@@ -62,3 +62,21 @@ SMTracerTest >> testTrace2 [
 		equals: SMFakeClass1.
 	self assert: (obs records at: 8) returnValue lastRecordId equals: 7
 ]
+
+{ #category : #tests }
+SMTracerTest >> testTraceException [
+	| obs rec |
+	obs := SMTracer new
+		captureTargets: {SMFakeClassException};
+		executableCode: [ SMFakeClassException runExample ].
+	obs run.
+	rec := obs records.
+	self assert: rec size equals: 4.
+	self assert: rec first isCall.
+	self assert: rec second isReturn.
+	self assert: rec third isCall.
+	self assert: (rec at: 4) isException.
+	self assert: (rec at: 4) exception theClass equals: Error.
+	self assert: (rec at: 4) exception errorMessage equals: 'something bad'.
+	
+]
