@@ -1,9 +1,6 @@
 Class {
 	#name : #SMMethodBasedFocusedTestsStrategy,
 	#superclass : #SMAbstractStrategy,
-	#instVars : [
-		'synthesizer'
-	],
 	#category : #'SmallMince-Core-2.Strategies'
 }
 
@@ -94,11 +91,6 @@ SMMethodBasedFocusedTestsStrategy >> setNameForTheTests: methodModels [
 					item methodName: (k asTestSelector asString, '_', index asString) asSymbol 
 					 ] ]
 		 ]
-]
-
-{ #category : #'as yet unclassified' }
-SMMethodBasedFocusedTestsStrategy >> synthesizer [
-	^ synthesizer
 ]
 
 { #category : #'as yet unclassified' }

@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'traces',
 		'classesUnderTest',
-		'results'
+		'results',
+		'synthesizer'
 	],
 	#category : #'SmallMince-Core-2.Strategies'
 }
@@ -33,7 +34,7 @@ SMAbstractStrategy >> run [
 
 { #category : #'as yet unclassified' }
 SMAbstractStrategy >> synthesizer [
-	^ self subclassResponsibility 
+	^ synthesizer
 ]
 
 { #category : #accessing }

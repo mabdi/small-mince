@@ -2,7 +2,6 @@ Class {
 	#name : #SMMinceStrategy,
 	#superclass : #SMAbstractStrategy,
 	#instVars : [
-		'synthesizer',
 		'composedObjects'
 	],
 	#category : #'SmallMince-Core-2.Strategies'
@@ -82,11 +81,6 @@ SMMinceStrategy >> setNameForTheTests: methodModels [
 		item methodName: ('testN_' , index asString) asSymbol.
 		
 		 ]
-]
-
-{ #category : #'as yet unclassified' }
-SMMinceStrategy >> synthesizer [
-	^ synthesizer
 ]
 
 { #category : #'as yet unclassified' }

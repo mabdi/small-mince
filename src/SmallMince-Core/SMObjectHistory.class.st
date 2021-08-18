@@ -6,7 +6,6 @@ Class {
 	#instVars : [
 		'objectReference',
 		'events',
-		'isInitialized',
 		'fromEvent',
 		'toEvent'
 	],
@@ -46,14 +45,9 @@ SMObjectHistory >> hash [
 ]
 
 { #category : #initialization }
-SMObjectHistory >> initialize [ 
+SMObjectHistory >> initialize [
 	events := OrderedCollection new.
-	isInitialized := false
-]
-
-{ #category : #accessing }
-SMObjectHistory >> isInitialized [
-	^ isInitialized
+	
 ]
 
 { #category : #accessing }
@@ -74,11 +68,6 @@ SMObjectHistory >> selectedEvents [
 	from := fromEvent ifNil: [ -1 ] ifNotNil: [ fromEvent ].
 	fromEvent := to.
 	^ events select: [ :ev | ev eventId > from and: [ ev eventId <= to ] ]
-]
-
-{ #category : #initialization }
-SMObjectHistory >> setInitializeDone [
-	isInitialized := true
 ]
 
 { #category : #'as yet unclassified' }
