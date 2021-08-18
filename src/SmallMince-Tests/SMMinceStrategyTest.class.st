@@ -33,28 +33,6 @@ SMMinceStrategyTest >> testComposeClasses [
 	self assert: (s results at: #SMFakeClass1) size equals: 2.
 	self
 		assert: ((s results at: #SMFakeClass1) at: 1) class
-		equals: SMObjectHistoryComposer
-]
-
-{ #category : #test }
-SMMinceStrategyTest >> testComposedObjectsToTestModel [
-	| traces s |
-	traces := self getTrace.
-	s := SMMinceStrategy new
-		traces: traces;
-		classesUnderTest:
-			{SMFakeClass1.
-			SMFakeClass3}.
-	s
-		composeClasses;
-		composedObjectsToTestModel.
-	self assert: s results size equals: 2.
-	self assert: (s results includesKey: #SMFakeClass1).
-	self assert: (s results includesKey: #SMFakeClass3).
-	self deny: (s results includesKey: #SMFakeClass2).
-	self assert: (s results at: #SMFakeClass1) size equals: 2.
-	self
-		assert: ((s results at: #SMFakeClass1) at: 1) class
 		equals: OrderedCollection.
 	self
 		assert: ((s results at: #SMFakeClass1) at: 1) first class
@@ -72,7 +50,6 @@ SMMinceStrategyTest >> testPackageTests [
 			SMFakeClass3}.
 	s
 		composeClasses;
-		composedObjectsToTestModel;
 		packageTests.
 	self assert: s results size equals: 2.
 	self assert: (s results includesKey: #SMFakeClass1).

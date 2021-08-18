@@ -9,31 +9,29 @@ Class {
 
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> composeClasses [
-	| myTraces uids records objectComposed |
+	| myTraces uids records objectComposed methods |
 	self classesUnderTest
 		do: [ :cls | 
-			myTraces := self traces select: [ :x | x receiver theClass = cls ].
-			uids := (myTraces collect: [ :x | x receiver uniqueId ])
-				removeDuplicates.
-			objectComposed := uids
-				collect: [ :uid | 
-					records := myTraces select: [ :x | x receiver uniqueId = uid ].
-					SMObjectHistoryComposer new
-						theClass: cls;
-						records: records;
-						run ].
-			results at: cls name put: objectComposed ]
+			objectComposed := self composeClassesFor: cls.
+			methods := objectComposed
+				collect: [ :history | self toTestModelObjects: history class: cls ].
+			results at: cls name put: methods ]
 ]
 
 { #category : #'as yet unclassified' }
-SMMinceStrategy >> composedObjectsToTestModel [
-	results
-		keysAndValuesDo: [ :cls :histories | 
-			results
-				at: cls
-				put:
-					(histories
-						collect: [ :history | self toTestModelObjects: history class: cls ]) ]
+SMMinceStrategy >> composeClassesFor: cls [
+	| myTraces uids records objectComposed |
+	myTraces := self traces select: [ :x | x receiver theClass = cls ].
+	uids := (myTraces collect: [ :x | x receiver uniqueId ])
+		removeDuplicates.
+	objectComposed := uids
+		collect: [ :uid | 
+			records := myTraces select: [ :x | x receiver uniqueId = uid ].
+			SMObjectHistoryComposer new
+				theClass: cls;
+				records: records;
+				run ].
+	^ objectComposed
 ]
 
 { #category : #initialization }
@@ -73,7 +71,6 @@ SMMinceStrategy >> results [
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> run [
 	self composeClasses.
-	self composedObjectsToTestModel.
 	self minimizeTests.
 	self packageTests.
 	^ results
