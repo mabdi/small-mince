@@ -34,9 +34,9 @@ SMObjectHistoryComposerTest >> testN1 [
 		select:
 			[ :rec | rec selector = #sum: and: [ SMFakeClass1 = rec receiver theClass ] ])
 		collect: [ :rec | rec receiver uniqueId ]) removeDuplicates.
-	records := obs records select: [ :obj | uids includes: obj receiver uniqueId  ].
+	records := obs records
+		select: [ :obj | uids includes: obj receiver uniqueId ].
 	comp := SMObjectHistoryComposer new
-		theClass: SMFakeClass1;
 		records: records.
 	comp run.
 	histories := comp objectHistories asOrderedCollection.
@@ -61,9 +61,10 @@ SMObjectHistoryComposerTest >> testN1 [
 		assert: (histories first events collect: [ :ev | ev value isStatePreserving ])
 		equals: (OrderedCollection newFrom: #(false false true)).
 	self
-		assert: (histories second events collect: [ :ev | ev value isStatePreserving ])
+		assert:
+			(histories second events collect: [ :ev | ev value isStatePreserving ])
 		equals: (OrderedCollection newFrom: #(false true false false true true false)).
-	self assertEmpty: comp dependencies
+	
 ]
 
 { #category : #tests }
@@ -77,15 +78,14 @@ SMObjectHistoryComposerTest >> testN2 [
 			x := SMFakeClass1 new.
 			SMFakeClass2 new addHundred: x ].
 	obs run.
-	
 	uids := (((obs records select: #isCall)
-		select:
-			[ :rec | rec selector = #addHundred: and: [ SMFakeClass2 = rec receiver theClass ] ])
+		select: [ :rec | 
+			rec selector = #addHundred:
+				and: [ SMFakeClass2 = rec receiver theClass ] ])
 		collect: [ :rec | rec receiver uniqueId ]) removeDuplicates.
 	records := obs records
 		select: [ :obj | uids includes: obj receiver uniqueId ].
 	comp := SMObjectHistoryComposer new
-		theClass: SMFakeClass2;
 		records: records.
 	comp run.
 	histories := comp objectHistories asOrderedCollection.
@@ -97,13 +97,6 @@ SMObjectHistoryComposerTest >> testN2 [
 	self
 		assert: (histories first events collect: #selector)
 		equals: (OrderedCollection newFrom: #(addHundred:)).
-	self assert: comp dependencies size equals: 1.
-	self
-		assert: comp dependencies asOrderedCollection first objectReference theClass
-		equals: SMFakeClass1.
-	self
-		assert: comp dependencies asOrderedCollection first objectReference uniqueId
-		equals: histories first events first argsBefore first uniqueId.
 	self
 		assert: histories first events first argsAfter first uniqueId
 		equals: histories first events first argsBefore first uniqueId
@@ -141,7 +134,6 @@ SMObjectHistoryComposerTest >> testNException [
 	obs run.
 	records := obs records.
 	comp := SMObjectHistoryComposer new
-		theClass: SMFakeClassException;
 		records: records.
 	comp run.
 	histories := comp objectHistories asOrderedCollection.
@@ -152,6 +144,5 @@ SMObjectHistoryComposerTest >> testNException [
 		equals: SMFakeClassException.
 	self assert: history events size equals: 2.
 	self assert: history events first isReturn.
-	self
-		assert: history events second isException
+	self assert: history events second isException
 ]

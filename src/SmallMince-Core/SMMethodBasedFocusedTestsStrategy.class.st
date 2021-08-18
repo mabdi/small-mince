@@ -27,7 +27,6 @@ SMMethodBasedFocusedTestsStrategy >> composeForMethod: aSelector inClass: aClass
 		select:
 			[ :rec | rec selector = aSelector and: [ aClass = rec receiver theClass ] ].
 	^ SMObjectHistoryComposer new
-		theClass: aClass;
 		records: records;
 		run
 ]

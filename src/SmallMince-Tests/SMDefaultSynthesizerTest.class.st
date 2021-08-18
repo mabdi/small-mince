@@ -188,15 +188,15 @@ SMDefaultSynthesizerTest >> testFakeHttp [
 				receiver uniqueId
 		put: 'var_4'.
 	comp := SMObjectHistoryComposer new
-		theClass: SMFakeHttpAgent;
 		records: records.
 	comp run.
 	objectUnderTest := comp objectHistories
 		detect: [ :x | x objectReference theClass = SMFakeHttpAgent ].
 	value := SMTestMethod new
 		methodName: #testTest;
-		dependencies: (comp objectHistories
-		reject: [ :x | x objectReference theClass = SMFakeHttpAgent ]);
+		dependencies:
+			(comp objectHistories
+				reject: [ :x | x objectReference theClass = SMFakeHttpAgent ]);
 		objectUnderTest: objectUnderTest.
 	synthesizer := self getSynthesizer.
 	synthesizer varNameMapper: nameMapping.
@@ -352,8 +352,7 @@ SMDefaultSynthesizerTest >> testMethodException [
 	obs run.
 	records := obs records.
 	records do: [ :r | r receiver uniqueId: 201 ].
-	comp := SMObjectHistoryComposer new
-		theClass: SMFakeClassException;
+	comp := SMObjectHistoryComposer new 
 		records: records.
 	comp run.
 	value := SMTestMethod new

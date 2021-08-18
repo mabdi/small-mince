@@ -5,9 +5,7 @@ Class {
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
 		'records',
-		'theClass',
-		'objectHistories',
-		'dependencies'
+		'objectHistories'
 	],
 	#category : #'SmallMince-Core-3.Preparation'
 }
@@ -31,27 +29,25 @@ SMObjectHistoryComposer >> addAllEventsForObject: obj [
 						ifTrue: [ obj addEvent: (SMObjectReturnEvent forCall: r2 return: r) ].
 					r isException
 						ifTrue: [ obj addEvent: (SMObjectExceptionEvent forCall: r2 exception: r) ] ] ].
-	obj setInitializeDone.
+	"obj setInitializeDone.
 	dependencies
 		addAll:
 			(obj dependsOn
-				collect: [ :objRef | SMObjectHistory new objectReference: objRef ])
-]
-
-{ #category : #accessing }
-SMObjectHistoryComposer >> dependencies [
-	^ dependencies
+				collect: [ :objRef | SMObjectHistory new objectReference: objRef ])"
 ]
 
 { #category : #accessing }
 SMObjectHistoryComposer >> dependenciesFor: aHistory [
-	^ dependencies select: [ :x | aHistory dependsOn includes: x objectReference ]
+	^ aHistory dependsOn
+				collect: [ :depId | 
+					self objectHistories
+						detect: [ :his | his objectReference uniqueId = depId ] ]
 ]
 
 { #category : #initialization }
-SMObjectHistoryComposer >> initialize [ 
+SMObjectHistoryComposer >> initialize [
 	objectHistories := OrderedCollection new.
-	dependencies := Set new
+	
 ]
 
 { #category : #running }
@@ -81,22 +77,9 @@ SMObjectHistoryComposer >> records: anObject [
 SMObjectHistoryComposer >> run [
 	| newDependencies |
 	self initializeUniqueObjectsCallingSelector.
-	objectHistories do: [ :obj | 
-		self addAllEventsForObject: obj ].
-	newDependencies := (dependencies reject: #isInitialized).
-	[ newDependencies isNotEmpty ] whileTrue: [ 
-		 newDependencies do: [ :obj |
-			self addAllEventsForObject: obj ].
-		newDependencies := (dependencies reject: #isInitialized).
-	 ]
-]
-
-{ #category : #accessing }
-SMObjectHistoryComposer >> theClass [
-	^ theClass
-]
-
-{ #category : #accessing }
-SMObjectHistoryComposer >> theClass: anObject [
-	theClass := anObject
+	objectHistories do: [ :obj | self addAllEventsForObject: obj ].
+	"newDependencies := dependencies reject: #isInitialized.
+	[ newDependencies isNotEmpty ]
+		whileTrue: [ newDependencies do: [ :obj | self addAllEventsForObject: obj ].
+			newDependencies := dependencies reject: #isInitialized ]"
 ]

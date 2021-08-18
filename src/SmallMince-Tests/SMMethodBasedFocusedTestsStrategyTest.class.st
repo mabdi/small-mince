@@ -87,12 +87,24 @@ SMMethodBasedFocusedTestsStrategyTest >> testPackageTests [
 { #category : #test }
 SMMethodBasedFocusedTestsStrategyTest >> testSetNameForTheTests [
 	| s m |
-	s := SMMethodBasedFocusedTestsStrategy new.
-	m := {(#method1 -> {SMTestMethod new.SMTestMethod new}).
-		(#method2:arg: -> {SMTestMethod new.SMTestMethod new}).
-		(#method3 -> {SMTestMethod new})} asDictionary.
+	s := SMMethodBasedFocusedTestsStrategy new. 
+	m := {(#method1
+		->
+			{SMTestMethod new.
+			SMTestMethod new}).
+	(#method2:arg:
+		->
+			{SMTestMethod new.
+			SMTestMethod new}).
+	(#method3 -> {SMTestMethod new})} asDictionary.
 	s setNameForTheTests: m.
-	self assert: ((m at: #method1) collect: #methodName) asArray equals: {'testMethod1_1'. 'testMethod1_2'}.
-	self assert: ((m at: #method2:arg:) collect: #methodName) asArray equals: {'testMethod2Arg_1'. 'testMethod2Arg_2'}.
-	self assert: ((m at: #method3) collect: #methodName) asArray equals: {'testMethod3'}
+	self
+		assert: ((m at: #method1) collect: #methodName) asArray
+		equals: {'testMethod1_1' . 'testMethod1_2'}.
+	self
+		assert: ((m at: #method2:arg:) collect: #methodName) asArray
+		equals: {'testMethod2Arg_1' . 'testMethod2Arg_2'}.
+	self
+		assert: ((m at: #method3) collect: #methodName) asArray
+		equals: {'testMethod3'}
 ]

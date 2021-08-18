@@ -2,14 +2,18 @@ Class {
 	#name : #SMMinceStrategy,
 	#superclass : #SMAbstractStrategy,
 	#instVars : [
-		'synthesizer'
+		'synthesizer',
+		'composedObjects'
 	],
 	#category : #'SmallMince-Core-2.Strategies'
 }
 
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> composeClasses [
-	| myTraces uids records objectComposed methods |
+	| objectComposed methods |
+	composedObjects := SMObjectHistoryComposer new
+		records: self traces;
+		run.
 	self classesUnderTest
 		do: [ :cls | 
 			objectComposed := self composeClassesFor: cls.
@@ -25,12 +29,8 @@ SMMinceStrategy >> composeClassesFor: cls [
 	uids := (myTraces collect: [ :x | x receiver uniqueId ])
 		removeDuplicates.
 	objectComposed := uids
-		collect: [ :uid | 
-			records := myTraces select: [ :x | x receiver uniqueId = uid ].
-			SMObjectHistoryComposer new
-				theClass: cls;
-				records: records;
-				run ].
+		collect:
+			[ :uid | composedObjects objectHistories detect: [:h | h objectReference uniqueId = uid].  ].
 	^ objectComposed
 ]
 
@@ -79,11 +79,8 @@ SMMinceStrategy >> run [
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> setNameForTheTests: methodModels [
 	methodModels doWithIndex: [ :item :index |
-		item size = 1 
-			ifTrue: [ item first methodName: ('testN_' , index asString) asSymbol ]
-			ifFalse: [ item withIndexDo: [ :item2 :index2 | 
-					item2 methodName: ('testN_', index asString, '_', index2 asString) asSymbol 
-					 ] ]
+		item methodName: ('testN_' , index asString) asSymbol.
+		
 		 ]
 ]
 
@@ -93,11 +90,13 @@ SMMinceStrategy >> synthesizer [
 ]
 
 { #category : #'as yet unclassified' }
-SMMinceStrategy >> toTestModelObjects: composedObjects class: cls [
-	^ composedObjects objectHistories
-		collect: [ :obs | 
-			SMTestMethod new
-				objectUnderTest: obs;
-				dependencies: (composedObjects dependenciesFor: obs);
-				yourself ]
+SMMinceStrategy >> toTestModelObjects: theComposedObjects class: cls [
+	| theTestMethodModel |
+	theTestMethodModel := SMTestMethod new
+		objectUnderTest: theComposedObjects.
+	theTestMethodModel
+		dependencies:
+			(composedObjects dependenciesFor: theComposedObjects 
+				).
+	^ theTestMethodModel
 ]

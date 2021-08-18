@@ -27,7 +27,7 @@ SMObjectHistory >> addEvent: anEvent [
 
 { #category : #accessing }
 SMObjectHistory >> dependsOn [
-	^ events flatCollect: #dependsOn
+	^ ((events flatCollect: #dependsOn) collect: #uniqueId) asSet
 ]
 
 { #category : #accessing }

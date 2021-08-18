@@ -33,10 +33,8 @@ SMMinceStrategyTest >> testComposeClasses [
 	self assert: (s results at: #SMFakeClass1) size equals: 2.
 	self
 		assert: ((s results at: #SMFakeClass1) at: 1) class
-		equals: OrderedCollection.
-	self
-		assert: ((s results at: #SMFakeClass1) at: 1) first class
-		equals: SMTestMethod
+		equals: SMTestMethod.
+	
 ]
 
 { #category : #test }
@@ -66,23 +64,10 @@ SMMinceStrategyTest >> testPackageTests [
 SMMinceStrategyTest >> testSetNameForTheTests [
 	| s m |
 	s := SMMinceStrategy new.
-	m := {(#method1
-		->
-			{SMTestMethod new.
-			SMTestMethod new}).
-	(#method2:arg:
-		->
-			{SMTestMethod new.
-			SMTestMethod new}).
-	(#method3 -> {SMTestMethod new})} asDictionary.
+	m := {SMTestMethod new.
+	SMTestMethod new.SMTestMethod new}.
 	s setNameForTheTests: m.
-	self
-		assert: ((m at: #method1) collect: #methodName) asArray
-		equals: {'testN_2_1' . 'testN_2_2'}.
-	self
-		assert: ((m at: #method2:arg:) collect: #methodName) asArray
-		equals: {'testN_1_1' . 'testN_1_2'}.
-	self
-		assert: ((m at: #method3) collect: #methodName) asArray
-		equals: {'testN_3'}
+	self assert: m first methodName equals: 'testN_1'.
+	self assert: m second methodName equals: 'testN_2'.
+	self assert: m third methodName equals: 'testN_3'
 ]
