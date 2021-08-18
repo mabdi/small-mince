@@ -40,11 +40,6 @@ SMObjectHistory >> fromEvent [
 	^ fromEvent
 ]
 
-{ #category : #accessing }
-SMObjectHistory >> fromEvent: anObject [
-	fromEvent := anObject
-]
-
 { #category : #comparing }
 SMObjectHistory >> hash [ 
 	^ objectReference hash
@@ -74,9 +69,11 @@ SMObjectHistory >> objectReference: anObject [
 { #category : #'as yet unclassified' }
 SMObjectHistory >> selectedEvents [
 	| from to |
-	to := toEvent ifNil: [ events size ] ifNotNil: [ toEvent ].
-	from := fromEvent ifNil: [ 1 ] ifNotNil: [ fromEvent ].
-	^ events copyFrom: from to: to 
+	events ifEmpty: [ ^ {  } ].
+	to := toEvent ifNil: [ events last eventId ] ifNotNil: [ toEvent ].
+	from := fromEvent ifNil: [ -1 ] ifNotNil: [ fromEvent ].
+	fromEvent := to.
+	^ events select: [ :ev | ev eventId > from and: [ ev eventId <= to ] ]
 ]
 
 { #category : #initialization }
@@ -87,11 +84,6 @@ SMObjectHistory >> setInitializeDone [
 { #category : #'as yet unclassified' }
 SMObjectHistory >> synthesisBy: aSynthesizer [
 	^ aSynthesizer synthesisObjectHistory: self
-]
-
-{ #category : #accessing }
-SMObjectHistory >> toEvent [
-	^ toEvent
 ]
 
 { #category : #accessing }

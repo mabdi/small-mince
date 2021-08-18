@@ -11,6 +11,7 @@ Class {
 SMDefaultSynthesizerTest >> genEvent1 [
 	| ev |
 	ev := SMObjectReturnEvent new.
+	ev eventId: 2.
 	ev selector: #sum:.
 	ev stateBefore: {}.
 	ev stateAfter: {}.
@@ -29,6 +30,7 @@ SMDefaultSynthesizerTest >> genEvent2 [
 		yourself.
 	evs := OrderedCollection new.
 	ev := SMObjectReturnEvent new.
+	ev eventId: 2.
 	ev selector: #addHundred:.
 	ev stateBefore: {}.
 	ev stateAfter: {}.
@@ -202,7 +204,7 @@ SMDefaultSynthesizerTest >> testFakeHttp [
 	expected := RBParser
 		parseMethod:
 			'testTest
-	| var_1 |
+	| var_1 var_2 var_4 var_3 |
 	var_1 := SMFakeHttpAgent new.
 	var_2 := SMFakeUrl new.
 	var_2 url: ''google.com''.

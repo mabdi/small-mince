@@ -10,7 +10,8 @@ Class {
 		'stateAfter',
 		'argsBefore',
 		'argsAfter',
-		'dependsOn'
+		'dependsOn',
+		'eventId'
 	],
 	#category : #'SmallMince-Core-Model'
 }
@@ -40,56 +41,14 @@ SMObjectAbstractEvent >> dependsOn [
 	^ dependsOn
 ]
 
-{ #category : #'as yet unclassified' }
-SMObjectAbstractEvent >> forCall: callRecord exception: exceptionRecord [
-	self selector: callRecord selector.
-	self stateBefore: (callRecord state collect: #copy).
-	self stateAfter: (exceptionRecord state collect: #copy).
-	self argsBefore: (callRecord arguments collect: #copy).
-	self argsAfter: (callRecord arguments collect: #copy).
-	dependsOn
-		addAll:
-			(self stateBefore select: #isObjectValue) values asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self stateAfter select: #isObjectValue) values asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self argsBefore select: #isObjectValue) asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self argsAfter select: #isObjectValue) asOrderedCollection
-				removeDuplicates.
-	self exceptionValue: exceptionRecord exception copy
+{ #category : #accessing }
+SMObjectAbstractEvent >> eventId [
+	^ eventId
 ]
 
-{ #category : #'as yet unclassified' }
-SMObjectAbstractEvent >> forCall: callRecord return: returnRecord [
-	self selector: callRecord selector.
-	self stateBefore: (callRecord state collect: #copy).
-	self stateAfter: (returnRecord state collect: #copy).
-	self argsBefore: (callRecord arguments collect: #copy).
-	self argsAfter: (callRecord arguments collect: #copy).
-	dependsOn
-		addAll:
-			(self stateBefore select: #isObjectValue) values asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self stateAfter select: #isObjectValue) values asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self argsBefore select: #isObjectValue) asOrderedCollection
-				removeDuplicates.
-	dependsOn
-		addAll:
-			(self argsAfter select: #isObjectValue) asOrderedCollection
-				removeDuplicates.
-	self returnValue: returnRecord returnValue copy
+{ #category : #accessing }
+SMObjectAbstractEvent >> eventId: anObject [
+	eventId := anObject
 ]
 
 { #category : #initialization }

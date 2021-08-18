@@ -3,7 +3,8 @@ Class {
 	#superclass : #SMAbstractMethodSynthesizer,
 	#instVars : [
 		'varNameMapper',
-		'tmps'
+		'tmps',
+		'methodModel'
 	],
 	#category : #'SmallMince-Core-4.Synthesis'
 }
@@ -62,6 +63,16 @@ SMDefaultSynthesizer >> synthesisBlockValue: anObject [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisClassPrimitiveValue: anObject [
 	^ (RBVariableNode named: anObject theValue name)
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> synthesisDependency: anObjectReference [
+	| objectModel |
+	methodModel ifNil: [ ^ {  } ].
+	objectModel := methodModel dependencies
+		detect: [ :dep | dep objectReference uniqueId = anObjectReference uniqueId ].
+	objectModel toEvent: anObjectReference lastRecordId.
+	^ objectModel synthesisBy: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,11 +216,11 @@ SMDefaultSynthesizer >> synthesisObjectErrorEvent: anObjectEvent [
 SMDefaultSynthesizer >> synthesisObjectHistory: anObjectHistory [
 	| statements |
 	statements := OrderedCollection new.
-	statements
+	anObjectHistory fromEvent ifNil: [statements
 		add:
 			(self
 				genAssgnmentNode: (self genCallNew: anObjectHistory objectReference theClass name)
-				toVariableNode: (self genVariableFor: anObjectHistory objectReference)).
+				toVariableNode: (self genVariableFor: anObjectHistory objectReference))].
 	statements
 		addAll:
 			(anObjectHistory selectedEvents
@@ -228,12 +239,13 @@ SMDefaultSynthesizer >> synthesisObjectReturnEvent: anObjectEvent [
 	| args statements |
 	statements := OrderedCollection new.
 	args := anObjectEvent argsBefore
-		collect: [ :arg | | node |
-			
+		collect: [ :arg | 
+			| node |
+			arg isObjectValue ifTrue: [ statements addAll: (self synthesisDependency: arg) ].
 			node := arg synthesisBy: self.
-			node isSequence ifTrue: [ statements addAll: (node statements allButLast ) ] ifFalse: [ node ]
-			
-			 ].
+			node isSequence
+				ifTrue: [ statements addAll: node statements allButLast ]
+				ifFalse: [ node ] ].
 	statements
 		add:
 			(RBMessageNode
@@ -257,12 +269,17 @@ SMDefaultSynthesizer >> synthesisSkippedValue: anObject [
 SMDefaultSynthesizer >> synthesisTestMethod: aTestMethod [
 	| theMethod theSequence statements temporaries |
 	statements := OrderedCollection new.
+	methodModel := aTestMethod.
 	statements addAll: (aTestMethod objectUnderTest synthesisBy: self).
 	temporaries := statements
 		select: #isAssignment
 		thenCollect: [ :anAssignment | RBTemporaryNode named: anAssignment variable name ].
-	theSequence := RBSequenceNode temporaries: temporaries statements: statements.
-	theMethod := RBMethodNode selector: aTestMethod methodName body: theSequence.
+	theSequence := RBSequenceNode
+		temporaries: temporaries
+		statements: statements.
+	theMethod := RBMethodNode
+		selector: aTestMethod methodName
+		body: theSequence.
 	^ theMethod
 ]
 
