@@ -35,11 +35,6 @@ SMPrimitiveValue >> hash [
 	^ theValue hash
 ]
 
-{ #category : #testing }
-SMPrimitiveValue >> isTGPrimitive [ 
-	^ true
-]
-
 { #category : #'as yet unclassified' }
 SMPrimitiveValue >> synthesisBy: aSynthesizer [
 	^ aSynthesizer synthesisPrimitiveValue: self

@@ -39,11 +39,6 @@ SMAbstractValue >> isObjectValue [
 	^ false
 ]
 
-{ #category : #testing }
-SMAbstractValue >> isTGPrimitive [ 
-	^ false
-]
-
 { #category : #'as yet unclassified' }
 SMAbstractValue >> synthesisBy: aSynthesizer [
 	^ self subclassResponsibility 
