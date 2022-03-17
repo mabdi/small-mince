@@ -13,6 +13,6 @@ BaselineOfSmallMince >> baseline: spec [
 			spec package: 'SmallMince-Tests'
 			with: [ spec requires: #( 'SmallMince-Core' ) ].
 			spec group: 'core' with: #('SmallMince-Core').
-			spec group: 'tests' with: #('core' 'SmallMince-Tests').
+			spec group: 'tests' with: #('core' 'SmallMince-ToyExample' 'SmallMince-Tests').
 			 ]
 ]
