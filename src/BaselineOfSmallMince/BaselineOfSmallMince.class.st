@@ -6,13 +6,16 @@ Class {
 
 { #category : #baselines }
 BaselineOfSmallMince >> baseline: spec [
+
 	<baseline>
-	spec
-		for: #common
-		do: [ spec package: 'SmallMince-Core'.
-			spec package: 'SmallMince-Tests'
+	spec for: #common do: [ 
+		spec package: 'SmallMince-Core'.
+		spec
+			package: 'SmallMince-Tests'
 			with: [ spec requires: #( 'SmallMince-Core' ) ].
-			spec group: 'core' with: #('SmallMince-Core').
-			spec group: 'tests' with: #('core' 'SmallMince-ToyExample' 'SmallMince-Tests').
-			 ]
+		spec
+			package: 'SmallMince-ToyExample'
+			with: [ spec requires: #( 'SmallMince-Tests' ) ].
+		spec group: 'core' with: #( 'SmallMince-Core' ).
+		spec group: 'tests' with: #( 'core' 'SmallMince-Tests' ) ]
 ]
