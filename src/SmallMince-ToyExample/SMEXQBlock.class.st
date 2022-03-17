@@ -79,7 +79,7 @@ SMEXQBlock >> is1Up [
 
 { #category : #accessing }
 SMEXQBlock >> is1Up: anObject [
-
+	self freeItem.
 	is1Up := anObject
 ]
 
@@ -91,7 +91,7 @@ SMEXQBlock >> isCoin [
 
 { #category : #accessing }
 SMEXQBlock >> isCoin: anObject [
-
+self freeItem.
 	isCoin := anObject
 ]
 
@@ -103,8 +103,14 @@ SMEXQBlock >> isFlower [
 
 { #category : #accessing }
 SMEXQBlock >> isFlower: anObject [
-
+self freeItem.
 	isFlower := anObject
+]
+
+{ #category : #testing }
+SMEXQBlock >> isHitable [
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -115,7 +121,7 @@ SMEXQBlock >> isMushroom [
 
 { #category : #accessing }
 SMEXQBlock >> isMushroom: anObject [
-
+self freeItem.
 	isMushroom := anObject
 ]
 
@@ -123,10 +129,4 @@ SMEXQBlock >> isMushroom: anObject [
 SMEXQBlock >> isOpened [
 
 	^ (self is1Up | self isCoin | self isFlower | self isMushroom ) not
-]
-
-{ #category : #testing }
-SMEXQBlock >> isQBlock [
-
-	^ true
 ]

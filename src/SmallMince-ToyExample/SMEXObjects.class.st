@@ -44,6 +44,11 @@ SMEXObjects >> hash [
 ]
 
 { #category : #testing }
+SMEXObjects >> isHitable [
+	^ false
+]
+
+{ #category : #testing }
 SMEXObjects >> isQBlock [
 
 	^ false

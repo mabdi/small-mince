@@ -2,7 +2,8 @@ Class {
 	#name : #SMEXMarioView,
 	#superclass : #Object,
 	#instVars : [
-		'world'
+		'world',
+		'stream'
 	],
 	#category : #'SmallMince-ToyExample'
 }
@@ -10,90 +11,110 @@ Class {
 { #category : #drawing }
 SMEXMarioView >> draw [
 
+	self newDraw.
 	1 to: world height do: [ :row | 
 		1 to: world width do: [ :column | 
-			(world objectAtLocation: row @ column) ifNotNil: [ :obj | 
-				obj drawBy: self ] ifNil: [ ' ' trace ] ].
-		'' traceCr ]
+			(world objectAtLocation: row @ column)
+				ifNotNil: [ :obj | obj drawBy: self ]
+				ifNil: [ stream << ' ' ] ].
+		stream cr ]
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> draw1up: anObject [
 
-	'+' trace	
+	stream << '+'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawBeetle: anObject [
 
-	'X' trace
+	stream <<'X'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawBlock: anObject [
 
-	anObject isOpened ifTrue: [ '!' trace ]
- ifFalse: [ '?' trace ]	
+	anObject isOpened
+		ifTrue: [ stream << '!' ]
+		ifFalse: [stream << '?'  ]
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawBrick: anObject [
 
-	'=' trace
+	stream <<'=' 
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawCoin: anObject [
 
-	'$' trace
+	stream <<'$' 
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawFlower: anObject [
 
-	'&' trace
+	stream <<'&' 
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawGoomba: anObject [
 
-	'X' trace
+	stream <<'X'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawGround: anObject [
 
-	'_' trace
+	stream <<'_'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawLuigi: anObject [
 
-	'*' trace
+	stream <<'*'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawMario: anObject [
 
-	'*' trace
+	stream <<'*'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawMushroom: anObject [
 
-	'@' trace
+	stream <<'@'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawPipe: anObject [
 
-	'|' trace
+	stream <<'|'
 ]
 
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawTurtle: anObject [
 
-	'X' trace
+	stream <<'X'
+]
+
+{ #category : #initialization }
+SMEXMarioView >> initialize [ 
+	stream := ''
+]
+
+{ #category : #'instance creation' }
+SMEXMarioView >> newDraw [
+	
+	
+	stream := '' writeStream
+]
+
+{ #category : #modes }
+SMEXMarioView >> screen [
+	^ stream contents 
 ]
 
 { #category : #accessing }

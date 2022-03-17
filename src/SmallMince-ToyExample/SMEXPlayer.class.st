@@ -27,12 +27,6 @@ SMEXPlayer >> acceptAction: aSymbol [
 	
 ]
 
-{ #category : #initialization }
-SMEXPlayer >> initialize [
-
-	lifes := 3
-]
-
 { #category : #accessing }
 SMEXPlayer >> lifes [
 
@@ -65,6 +59,19 @@ SMEXPlayer >> score: anObject [
 { #category : #initialization }
 SMEXPlayer >> setUp [
 
+	lifes := 3.
 	small := true.
 	score := 0
+]
+
+{ #category : #accessing }
+SMEXPlayer >> small [
+
+	^ small
+]
+
+{ #category : #accessing }
+SMEXPlayer >> small: anObject [
+
+	small := anObject
 ]

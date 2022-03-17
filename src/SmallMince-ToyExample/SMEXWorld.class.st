@@ -56,6 +56,13 @@ SMEXWorld >> objects [
 	^ objects
 ]
 
+{ #category : #adding }
+SMEXWorld >> remove: anItem [
+
+	
+	objects remove: anItem
+]
+
 { #category : #initialization }
 SMEXWorld >> setUp [
 	self subclassResponsibility 

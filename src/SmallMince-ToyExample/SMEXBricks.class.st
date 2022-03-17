@@ -18,3 +18,14 @@ SMEXBricks class >> getById: aString [
 SMEXBricks >> drawBy: aDrawer [
 	aDrawer drawBrick: self
 ]
+
+{ #category : #'as yet unclassified' }
+SMEXBricks >> hitBy: aPlayer in: world [
+	world remove: self
+]
+
+{ #category : #testing }
+SMEXBricks >> isHitable [
+
+	^ true
+]
