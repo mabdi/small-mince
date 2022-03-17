@@ -43,6 +43,12 @@ SMEXObjects >> hash [
 	^ (self class hash * self location hash ) 
 ]
 
+{ #category : #testing }
+SMEXObjects >> isQBlock [
+
+	^ false
+]
+
 { #category : #accessing }
 SMEXObjects >> location [
 

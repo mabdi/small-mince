@@ -36,17 +36,39 @@ SMEXQBlock >> drawBy: aDrawer [
 ]
 
 { #category : #'as yet unclassified' }
+SMEXQBlock >> freeItem [
+
+	is1Up := false.
+	isCoin := false.
+	isFlower := false.
+	isMushroom := false
+]
+
+{ #category : #'as yet unclassified' }
 SMEXQBlock >> hitBy: aPlayer in: world [
 
-	self halt.
+	self isCoin ifTrue: [ aPlayer score: aPlayer score + 1 ].
+	self isMushroom ifTrue: [ 
+		| item |
+		item := aPlayer small
+			        ifTrue: [ SMEXMushroom new ]
+			        ifFalse: [ SMEXFlower new ].
+		item location: self location + (-1 @ 0).
+		world add: item ].
+	self isFlower ifTrue: [ 
+		| item |
+		item := SMEXFlower new.
+		item location: self location + (-1 @ 0).
+		world add: item ].
+	self is1Up ifTrue: [ aPlayer lifes: aPlayer lifes + 1 ].
+	self freeItem
 ]
 
 { #category : #initialization }
 SMEXQBlock >> initialize [
-	is1Up := false.
+
+	self freeItem.
 	isCoin := true.
-	isFlower := false.
-	isMushroom := false
 ]
 
 { #category : #accessing }
@@ -101,4 +123,10 @@ SMEXQBlock >> isMushroom: anObject [
 SMEXQBlock >> isOpened [
 
 	^ (self is1Up | self isCoin | self isFlower | self isMushroom ) not
+]
+
+{ #category : #testing }
+SMEXQBlock >> isQBlock [
+
+	^ true
 ]

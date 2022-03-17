@@ -18,7 +18,7 @@ SMEXMarioGame class >> example [
 	| game |
 	game := SMEXMarioGame level: 1.
 	game player: #mario.
-	game start.
+	[ game start.
 	game acceptAction: #Right.
 	game acceptAction: #Right.
 	game acceptAction: #Right.
@@ -27,8 +27,8 @@ SMEXMarioGame class >> example [
 	game acceptAction: #Jump.
 	(Delay forSeconds: 1) wait.
 	game acceptAction: #Right.
-	game acceptAction: #Jump.
-	game stop: true
+	game acceptAction: #Jump ] 
+ensure: [ game stop: true ]
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ SMEXMarioGame >> jumpPlayer [
 	objectInDestination ifNil: [ 
 		player location: newLocation.
 		^ self ].
-	objectInDestination isBlock ifTrue: [ 
+	objectInDestination isQBlock ifTrue: [ 
 		objectInDestination hitBy: player in: world ].
 	newLocation := newLocation + (1 @ 0).
 	player location: newLocation

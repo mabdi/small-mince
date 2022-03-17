@@ -32,7 +32,8 @@ SMEXMarioView >> drawBeetle: anObject [
 { #category : #'as yet unclassified' }
 SMEXMarioView >> drawBlock: anObject [
 
-	'?' trace
+	anObject isOpened ifTrue: [ '!' trace ]
+ ifFalse: [ '?' trace ]	
 ]
 
 { #category : #'as yet unclassified' }
