@@ -25,6 +25,17 @@ SmallMince class >> example1 [
 		run
 ]
 
+{ #category : #examples }
+SmallMince class >> exampleMario [
+
+	SmallMince new
+		classesToObserve: 'SmallMince-ToyExample' asPackage classes;
+		classesUnderTest: { SMEXQBlock };
+		executableCode: [ (SMEXMarioGameTest selector: #testRun) run ];
+		strategy: SMMinceStrategy  new;
+		run
+]
+
 { #category : #accessing }
 SmallMince >> classesToObserve [
 	^ classesToObserve
