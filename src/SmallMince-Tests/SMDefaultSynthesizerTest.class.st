@@ -378,6 +378,15 @@ SMDefaultSynthesizerTest >> testNull [
 ]
 
 { #category : #tests }
+SMDefaultSynthesizerTest >> testPoint [
+
+	| res expected |
+	res := (2@1) sm_valueReference synthesisBy: self getSynthesizer.
+	expected := RBParser parseExpression: '2@1'.
+	self assert: res equals: expected
+]
+
+{ #category : #tests }
 SMDefaultSynthesizerTest >> testSkipped [
 	| value res expected |
 	value := 10 @ 20 corner: 20 @ 20.

@@ -8,6 +8,9 @@ Class {
 }
 
 { #category : #tests }
-SMClassPrimitiveValueTest >> testEqual [ 
-	self assert: (1@1) sm_valueReference equals: (SMSkippedValue with: (0@0))
+SMClassPrimitiveValueTest >> testEqual [
+
+	self
+		assert: (SMFakeUrl new url: '123') sm_valueReference
+		equals: (SMSkippedValue with: ((SMFakeUrl new url: '111')))
 ]
