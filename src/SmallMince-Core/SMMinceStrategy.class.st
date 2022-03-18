@@ -9,16 +9,17 @@ Class {
 
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> composeClasses [
+
 	| objectComposed methods |
 	composedObjects := SMObjectHistoryComposer new
-		records: self traces;
-		run.
-	self classesUnderTest
-		do: [ :cls | 
-			objectComposed := self composeClassesFor: cls.
-			methods := objectComposed
-				collect: [ :history | self toTestModelObjects: history class: cls ].
-			results at: cls name put: methods ]
+		                   records: self traces;
+		                   run.
+	
+	self classesUnderTest do: [ :cls | 
+		objectComposed := self composeClassesFor: cls.
+		methods := objectComposed collect: [ :history | 
+			           self toTestModelObjects: history class: cls ].
+		results at: cls name put: methods ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,10 +43,16 @@ SMMinceStrategy >> initialize [
 
 { #category : #'as yet unclassified' }
 SMMinceStrategy >> minimizeTests [
-	self flag: #TODO. "minimize"
-	"remove all state preserving events"
-	"remove events after MUT (think about #close methods)"
-	"remove Test t if there is another test t' that t is subset of t'"
+
+	"remove all state preserving events""remove events after MUT (think about #close methods)""remove Test t if there is another test t' that t is subset of t'"
+
+	results keysAndValuesDo: [ :className :methodsList | 
+		methodsList do: [ :methodModel | 
+			methodModel objectUnderTest events removeAllSuchThat: [ :event | 
+				event isStatePreserving ].
+			methodModel dependencies do: [ :dep | 
+				dep events removeAllSuchThat: [ :event | event isStatePreserving ] ] ] ].
+	
 ]
 
 { #category : #'as yet unclassified' }
