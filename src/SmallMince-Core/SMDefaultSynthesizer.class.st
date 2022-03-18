@@ -256,6 +256,16 @@ SMDefaultSynthesizer >> synthesisObjectReturnEvent: anObjectEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> synthesisPointValue: anObject [
+
+	^ RBMessageNode
+				 receiver: (RBLiteralValueNode value: anObject theValue x)
+				 selector: #@
+				 arguments: {
+						 (RBLiteralValueNode value: anObject theValue y) }
+]
+
+{ #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisPrimitiveValue: anObject [
 	^ (self genLiteral: anObject theValue)
 ]
