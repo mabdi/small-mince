@@ -21,15 +21,6 @@ SMListValue >> = anObject [
 	^ theValues = anObject theValues
 ]
 
-{ #category : #accessing }
-SMListValue >> copy [
-	| clone |
-	clone := super copy.
-	^ clone
-		theValues: (self theValues collect: #copy);
-		yourself
-]
-
 { #category : #comparing }
 SMListValue >> hash [
 	^ theValues hash

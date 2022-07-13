@@ -1,76 +1,54 @@
 Class {
 	#name : #SMObjectReference,
-	#superclass : #SMAbstractValue,
+	#superclass : #Object,
+	#traits : 'SMInternalClassesTrait',
+	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
 		'uniqueId',
-		'lastRecordId',
-		'stack'
+		'version',
+		'theClass'
 	],
 	#category : #'SmallMince-Core-Model'
 }
 
-{ #category : #'as yet unclassified' }
-SMObjectReference class >> uniqueIdFor: anObject [
-	^ anObject basicIdentityHash
-]
-
 { #category : #'instance creation' }
-SMObjectReference class >> with: anObject [
-	| obj |
-	obj := super with: anObject.
-	obj lastRecordId: -1.
-	obj uniqueId: (self uniqueIdFor: anObject).
-	^ obj
-]
+SMObjectReference class >> from: anObject [
 
-{ #category : #comparing }
-SMObjectReference >> = anObject [ 
-	super = anObject ifFalse: [ ^ false ].
-	^ uniqueId = anObject uniqueId
+^ self new uniqueId: anObject uniqueId ; version: anObject version ; theClass: anObject theClass; yourself
 ]
 
 { #category : #accessing }
-SMObjectReference >> copy [
-	| clone |
-	clone := super copy.
-	^ clone
-		lastRecordId: self lastRecordId;
-		uniqueId: self uniqueId;
-		yourself
-]
+SMObjectReference >> theClass [
 
-{ #category : #testing }
-SMObjectReference >> isObjectValue [
-	^ true
+	^ theClass
 ]
 
 { #category : #accessing }
-SMObjectReference >> lastRecordId [
-	^ lastRecordId
-]
+SMObjectReference >> theClass: anObject [
 
-{ #category : #accessing }
-SMObjectReference >> lastRecordId: anObject [
-	lastRecordId := anObject
-]
-
-{ #category : #accessing }
-SMObjectReference >> stack [
-	stack ifNil: [ stack := Stack new ].
-	^ stack
-]
-
-{ #category : #'as yet unclassified' }
-SMObjectReference >> synthesisBy: aSynthesizer [
-	^ aSynthesizer synthesisObjectReference: self
+	theClass := anObject
 ]
 
 { #category : #accessing }
 SMObjectReference >> uniqueId [
+
 	^ uniqueId
 ]
 
 { #category : #accessing }
 SMObjectReference >> uniqueId: anObject [
+
 	uniqueId := anObject
+]
+
+{ #category : #accessing }
+SMObjectReference >> version [
+
+	^ version
+]
+
+{ #category : #accessing }
+SMObjectReference >> version: anObject [
+
+	version := anObject
 ]

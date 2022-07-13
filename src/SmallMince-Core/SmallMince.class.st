@@ -6,8 +6,8 @@ Class {
 	#instVars : [
 		'executableCode',
 		'classesToObserve',
-		'classesUnderTest',
-		'strategy'
+		'strategy',
+		'slicingCriteria'
 	],
 	#category : #'SmallMince-Core-0.Core'
 }
@@ -30,9 +30,8 @@ SmallMince class >> exampleMario [
 
 	SmallMince new
 		classesToObserve: 'SmallMince-ToyExample' asPackage classes;
-		classesUnderTest: { SMEXQBlock };
+		slicingCriteria: [:record | record ];
 		executableCode: [ (SMEXMarioGameTest selector: #testRuns) run ];
-		strategy: SMMinceStrategy new;
 		run
 ]
 
@@ -47,16 +46,6 @@ SmallMince >> classesToObserve: anObject [
 ]
 
 { #category : #accessing }
-SmallMince >> classesUnderTest [
-	^ classesUnderTest
-]
-
-{ #category : #accessing }
-SmallMince >> classesUnderTest: anObject [
-	classesUnderTest := anObject
-]
-
-{ #category : #accessing }
 SmallMince >> executableCode [
 	^ executableCode
 ]
@@ -68,32 +57,35 @@ SmallMince >> executableCode: anObject [
 
 { #category : #running }
 SmallMince >> run [
-	| traces testMethodModels generatedTests | 
+
+	| traces testMethodModels generatedTests |
 	traces := SMTracer new
-		captureTargets: self classesToObserve;
-		executableCode: self executableCode;
-		run;
-		records.
-	testMethodModels := self strategy 
-		traces: traces;
-		classesUnderTest: self classesUnderTest; 
-		run.
+		          captureTargets: self classesToObserve;
+		          executableCode: self executableCode;
+		          run;
+		          records.
+	testMethodModels := SMDependencyBasedTestTransplantation new
+		                    traces: traces;
+		                    slicingCriteria: self slicingCriteria;
+		                    run.
 	generatedTests := Dictionary new.
-	testMethodModels keysAndValuesDo: [:className :arrayOfMethods | 
-		generatedTests at: className put: (arrayOfMethods collect: [:methodModel |
-				methodModel synthesisBy: self strategy synthesizer	
-			])
-		].
+	testMethodModels keysAndValuesDo: [ :className :arrayOfMethods | 
+		generatedTests
+			at: className
+			put: (arrayOfMethods collect: [ :methodModel | 
+					 methodModel synthesisBy: SMDefaultSynthesizer new ]) ].
 	generatedTests keysAndValuesDo: [ :key :value | 
-			SMTestClassBuilder new buildFor: key methods: value ].
+		SMTestClassBuilder new buildFor: key methods: value ]
 ]
 
 { #category : #accessing }
-SmallMince >> strategy [
-	^ strategy
+SmallMince >> slicingCriteria [
+
+	^ slicingCriteria
 ]
 
 { #category : #accessing }
-SmallMince >> strategy: anObject [
-	strategy := anObject
+SmallMince >> slicingCriteria: anObject [
+
+	slicingCriteria := anObject
 ]

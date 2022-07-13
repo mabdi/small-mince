@@ -94,55 +94,49 @@ SMTracer >> isItSafeToProxyTo: aMethod [
 
 { #category : #'as yet unclassified' }
 SMTracer >> postCall: selector with: args in: aReceiver exception: exception [
-	| id record old_selector |
+
+	|  record old_selector |
 	old_selector := aReceiver sm_objectStack pop.
-	old_selector = selector
-		ifFalse: [ self error: 'Fatal Error' ].
+	old_selector = selector ifFalse: [ self error: 'Fatal Error' ].
 	aReceiver sm_objectStack ifNotEmpty: [ ^ self ].
-	record := SMExceptionLogRecord new
-		for: aReceiver
-		selector: selector
-		args: args
-		exception: exception.
-	id := self recordLog: record.
-	aReceiver sm_state_updateId: id
+	record := aReceiver sm_cached_pre.
+	record exception: exception.
+	self recordLog: record.
+	aReceiver sm_versionIncrease
 ]
 
 { #category : #'as yet unclassified' }
 SMTracer >> postCall: selector with: args in: aReceiver result: result [
-	| id record old_selector |
+
+	| record old_selector |
 	old_selector := aReceiver sm_objectStack pop.
-	old_selector = selector
-		ifFalse: [ self error: 'Fatal Error' ].
-	aReceiver sm_objectStack ifNotEmpty: [^ self].
-	record := SMReturnLogRecord new
-		for: aReceiver
-		selector: selector
-		args: args
-		result: result.
-	id := self recordLog: record.
-	aReceiver sm_state_updateId: id
+	old_selector = selector ifFalse: [ self error: 'Fatal Error' ].
+	aReceiver sm_objectStack ifNotEmpty: [ ^ self ].
+	record := aReceiver sm_cached_pre.
+	record returnValue: result.
+	record argsAfter: args.
+	record stateAfter: aReceiver.
+	self recordLog: record.
+	aReceiver sm_versionIncrease
 ]
 
 { #category : #'as yet unclassified' }
 SMTracer >> preCall: selector with: args in: aReceiver [
-	| id record |
+
+	| record |
 	aReceiver sm_objectStack push: selector.
-	aReceiver sm_objectStack size > 1
-		ifTrue: [ ^ self ].
-	record := SMCallLogRecord new
-		for: aReceiver
-		selector: selector
-		args: args.
-	id := self recordLog: record.
-	aReceiver sm_state_updateId: id
+	aReceiver sm_objectStack size > 1 ifTrue: [ ^ self ].
+	record := SMLogRecord new
+		          receiver: aReceiver;
+		          selector: selector;
+		          arguments: args.
+	aReceiver sm_cache_pre: record
 ]
 
 { #category : #'as yet unclassified' }
 SMTracer >> recordLog: aRecord [
 	records add: aRecord.
-	aRecord id: records size.
-	^ records size
+	
 ]
 
 { #category : #accessing }

@@ -4,29 +4,41 @@ Class {
 	#traits : 'SMInternalClassesTrait',
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
+		'uniqueId',
 		'theClass'
 	],
 	#category : #'SmallMince-Core-Model'
 }
 
+{ #category : #'as yet unclassified' }
+SMAbstractValue class >> uniqueIdFor: anObject [
+	^ anObject basicIdentityHash
+]
+
 { #category : #'instance creation' }
 SMAbstractValue class >> with: anObject [
+
 	^ self new
-		theClass: anObject class;
-		yourself
+		  theClass: anObject class;
+		uniqueId: (self uniqueIdFor: anObject);
+	
+		  yourself
 ]
 
 { #category : #comparing }
 SMAbstractValue >> = anObject [
+
 	self class = anObject class ifFalse: [ ^ false ].
-	^ theClass = anObject theClass
+	theClass = anObject theClass ifFalse: [ ^ false ].
+	^ true
 ]
 
-{ #category : #copying }
-SMAbstractValue >> copy [
-	^ self class new
-		theClass: self theClass;
-		yourself
+{ #category : #comparing }
+SMAbstractValue >> == anObject [
+
+	self = anObject ifFalse: [ ^ false ].
+	uniqueId = anObject uniqueId ifFalse: [ ^ false ].
+	^ true
 ]
 
 { #category : #comparing }
@@ -52,4 +64,14 @@ SMAbstractValue >> theClass [
 { #category : #copying }
 SMAbstractValue >> theClass: anObject [
 	theClass := anObject
+]
+
+{ #category : #accessing }
+SMAbstractValue >> uniqueId [
+	^ uniqueId
+]
+
+{ #category : #accessing }
+SMAbstractValue >> uniqueId: anObject [
+	uniqueId := anObject
 ]

@@ -21,15 +21,6 @@ SMPrimitiveValue >> = anObject [
 	^ anObject theValue = self theValue
 ]
 
-{ #category : #accessing }
-SMPrimitiveValue >> copy [
-	| clone |
-	clone := super copy.
-	^ clone
-		theValue: self theValue copy;
-		yourself
-]
-
 { #category : #comparing }
 SMPrimitiveValue >> hash [
 	^ theValue hash

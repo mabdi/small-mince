@@ -23,7 +23,7 @@ SMDefaultSynthesizerTest >> genEvent1 [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genEvent2 [
 	| evs ev objRef |
-	objRef := SMObjectReference new
+	objRef := SMObjectValue new
 		theClass: SMFakeClass1;
 		lastRecordId: -1;
 		uniqueId: 99;
@@ -43,7 +43,7 @@ SMDefaultSynthesizerTest >> genEvent2 [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genHistory [
 	| obj objRef |
-	objRef := SMObjectReference new 
+	objRef := SMObjectValue new 
 		theClass: SMFakeClass1;
 		lastRecordId: -1; 
 		uniqueId: 100; 
@@ -56,7 +56,7 @@ SMDefaultSynthesizerTest >> genHistory [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> genHistory2 [
 	| obj objRef |
-	objRef := SMObjectReference new 
+	objRef := SMObjectValue new 
 		theClass: SMFakeClass2;
 		lastRecordId: -1; 
 		uniqueId: 10; 

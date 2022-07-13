@@ -5,22 +5,11 @@ Class {
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
 		'traces',
-		'classesUnderTest',
 		'results',
-		'synthesizer'
+		'slicingCriteria'
 	],
 	#category : #'SmallMince-Core-2.Strategies'
 }
-
-{ #category : #accessing }
-SMAbstractStrategy >> classesUnderTest [
-	^ classesUnderTest
-]
-
-{ #category : #accessing }
-SMAbstractStrategy >> classesUnderTest: anObject [
-	classesUnderTest := anObject
-]
 
 { #category : #initialization }
 SMAbstractStrategy >> initialize [ 
@@ -32,9 +21,16 @@ SMAbstractStrategy >> run [
 	^ self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
-SMAbstractStrategy >> synthesizer [
-	^ synthesizer
+{ #category : #accessing }
+SMAbstractStrategy >> slicingCriteria [
+
+	^ slicingCriteria
+]
+
+{ #category : #accessing }
+SMAbstractStrategy >> slicingCriteria: anObject [
+
+	slicingCriteria := anObject
 ]
 
 { #category : #accessing }

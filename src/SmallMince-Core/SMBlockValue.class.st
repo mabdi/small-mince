@@ -21,15 +21,6 @@ SMBlockValue >> = anObject [
 	^ theASTNode = anObject theASTNode 
 ]
 
-{ #category : #copying }
-SMBlockValue >> copy [
-	| clone |
-	clone := super copy.
-	^ clone
-		theASTNode: self theASTNode;
-		yourself
-]
-
 { #category : #comparing }
 SMBlockValue >> hash [
 	^ theASTNode hash
