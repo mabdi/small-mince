@@ -12,7 +12,7 @@ BaselineOfSmallMince >> baseline: spec [
 		spec
 			baseline: 'Mocketry'
 			with: [ 
-			spec repository: 'github://dionisiydk/Mocketry:versionTagOrBranch' ].
+			spec repository: 'github://dionisiydk/Mocketry' ].
 		spec
 			package: 'SmallMince-Core'
 			with: [ spec requires: #( 'Mocketry' ) ].
