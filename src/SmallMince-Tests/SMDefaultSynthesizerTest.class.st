@@ -8,65 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SMDefaultSynthesizerTest >> genEvent1 [
-	| ev |
-	ev := SMObjectReturnEvent new.
-	ev eventId: 2.
-	ev selector: #sum:.
-	ev stateBefore: {}.
-	ev stateAfter: {}.
-	ev argsBefore: {10 sm_valueReference}.
-	ev argsAfter: {}.
-	^ ev
-]
-
-{ #category : #'as yet unclassified' }
-SMDefaultSynthesizerTest >> genEvent2 [
-	| evs ev objRef |
-	objRef := SMObjectValue new
-		theClass: SMFakeClass1;
-		lastRecordId: -1;
-		uniqueId: 99;
-		yourself.
-	evs := OrderedCollection new.
-	ev := SMObjectReturnEvent new.
-	ev eventId: 2.
-	ev selector: #addHundred:.
-	ev stateBefore: {}.
-	ev stateAfter: {}.
-	ev argsBefore: {objRef}.
-	ev argsAfter: {}.
-	evs add: ev.
-	^ evs
-]
-
-{ #category : #'as yet unclassified' }
-SMDefaultSynthesizerTest >> genHistory [
-	| obj objRef |
-	objRef := SMObjectValue new 
-		theClass: SMFakeClass1;
-		lastRecordId: -1; 
-		uniqueId: 100; 
-		yourself.
-	obj := SMObjectHistory new objectReference: objRef.
-	obj addEvent: self genEvent1.
-	^ obj
-]
-
-{ #category : #'as yet unclassified' }
-SMDefaultSynthesizerTest >> genHistory2 [
-	| obj objRef |
-	objRef := SMObjectValue new 
-		theClass: SMFakeClass2;
-		lastRecordId: -1; 
-		uniqueId: 10; 
-		yourself.
-	obj := SMObjectHistory new objectReference: objRef.
-	self genEvent2 do: [:ev | obj addEvent: ev].
-	^ obj
-]
-
-{ #category : #'as yet unclassified' }
 SMDefaultSynthesizerTest >> getSynthesizer [
 	^ SMDefaultSynthesizer new
 ]
@@ -156,64 +97,60 @@ tmp_1'.
 
 { #category : #tests }
 SMDefaultSynthesizerTest >> testFakeHttp [
+
 	| value res expected obs records comp objectUnderTest nameMapping synthesizer |
 	obs := SMTracer new
-		captureTargets:
-			{SMFakeHttpAgent.
-			SMFakeMethod.
-			SMFakeProtocol.
-			SMFakeUrl};
-		executableCode: [ SMFakeHttpAgent runExample ].
+		       captureTargets: { 
+				       SMFakeHttpAgent.
+				       SMFakeMethod.
+				       SMFakeProtocol.
+				       SMFakeUrl };
+		       executableCode: [ SMFakeHttpAgent runExample ].
 	obs run.
 	records := obs records.
 	nameMapping := Dictionary new.
 	nameMapping
 		at:
-			(records detect: [ :r | r receiver theClass = SMFakeHttpAgent ])
-				receiver uniqueId
+		(records keys detect: [ :r | r theClass = SMFakeHttpAgent ])
+			uniqueId
 		put: 'var_1'.
 	nameMapping
-		at:
-			(records detect: [ :r | r receiver theClass = SMFakeUrl ]) receiver
-				uniqueId
+		at: (records keys detect: [ :r | r theClass = SMFakeUrl ]) uniqueId
 		put: 'var_2'.
 	nameMapping
 		at:
-			(records detect: [ :r | r receiver theClass = SMFakeMethod ]) receiver
-				uniqueId
+		(records keys detect: [ :r | r theClass = SMFakeMethod ]) uniqueId
 		put: 'var_3'.
 	nameMapping
 		at:
-			(records detect: [ :r | r receiver theClass = SMFakeProtocol ])
-				receiver uniqueId
+		(records keys detect: [ :r | r theClass = SMFakeProtocol ]) uniqueId
 		put: 'var_4'.
-	comp := SMObjectHistoryComposer new
-		records: records.
-	comp run.
-	objectUnderTest := comp objectHistories
-		detect: [ :x | x objectReference theClass = SMFakeHttpAgent ].
-	value := SMTestMethod new
-		methodName: #testTest;
-		dependencies:
-			(comp objectHistories
-				reject: [ :x | x objectReference theClass = SMFakeHttpAgent ]);
-		objectUnderTest: objectUnderTest.
+
+	value := SMDependencyBasedTestTransplantation new
+		         traces: obs records;
+		         links: obs links;
+		         slicingCriteria: [ :traces | 
+			         (traces associationsSelect: [ :kvp | 
+					          kvp key theClass = SMFakeHttpAgent ]) collect: [ 
+					         :history | history last ] ];
+		         run.
+	value := value anyOne first.
+	
+
 	synthesizer := self getSynthesizer.
 	synthesizer varNameMapper: nameMapping.
 	res := value synthesisBy: synthesizer.
-	expected := RBParser
-		parseMethod:
-			'testTest
-	| var_1 var_2 var_4 var_3 |
-	var_1 := SMFakeHttpAgent new.
+	expected := RBParser parseMethod: 'test1
+	| var_2 var_4 var_3 var_1 |
 	var_2 := SMFakeUrl new.
 	var_2 url: ''google.com''.
 	var_4 := SMFakeProtocol new.
 	var_4 protocol: ''https''.
 	var_2 protocol: var_4.
-	var_1 url: var_2.
 	var_3 := SMFakeMethod new.
 	var_3 method: #GET.
+	var_1 := SMFakeHttpAgent new.
+	var_1 url: var_2.
 	var_1 method: var_3.
 	var_1 execute'.
 	self assert: res equals: expected
@@ -234,24 +171,6 @@ SMDefaultSynthesizerTest >> testFraction [
 	res := value sm_valueReference synthesisBy: self getSynthesizer.
 	expected := RBParser parseExpression: '1/2'.
 	self assert: res  equals: expected
-]
-
-{ #category : #tests }
-SMDefaultSynthesizerTest >> testHistory [
-	| value res expected |
-	value := self genHistory.
-	res := value synthesisBy: self getSynthesizer.
-	expected := (RBParser parseExpression: 'var_100 := SMFakeClass1 new. var_100 sum: 10') statements.
-	self assert: res equals: expected
-]
-
-{ #category : #tests }
-SMDefaultSynthesizerTest >> testHistoryDependent [
-	| value res expected |
-	value := self genHistory2.
-	res := value synthesisBy: self getSynthesizer.
-	expected := (RBParser parseExpression: 'var_10 := SMFakeClass2 new. var_10 addHundred: var_99') statements.
-	self assert: res equals: expected
 ]
 
 { #category : #tests }
@@ -331,37 +250,59 @@ SMDefaultSynthesizerTest >> testListPrimitive [
 
 { #category : #tests }
 SMDefaultSynthesizerTest >> testMethod [
-	| value res expected |
-	value := SMTestMethod new 
-		methodName: #testTest; 
-		objectUnderTest: self genHistory.
-	res := value synthesisBy: self getSynthesizer.
-	expected := (RBParser parseMethod: 'testTest
+
+	| value res expected ev list receiver nameMapping synthesizer |
+	receiver := SMFakeClass1 new.
+	ev := SMLogRecord new.
+	ev receiver: receiver.
+	ev selector: #sum:.
+	ev arguments: { 10 }.
+	list := OrderedCollection
+		        with: { 
+				        #event.
+				        ev }
+		        with: { 
+				        #new.
+				        receiver sm_valueReference }.
+		nameMapping := Dictionary new.
+nameMapping at: receiver sm_valueReference uniqueId put: 'var_100'.
+	value := (SMTestMethod from: list) methodName: #testTest.
+	synthesizer := self getSynthesizer.
+	synthesizer varNameMapper: nameMapping.
+
+	res := value synthesisBy: synthesizer.
+	expected := RBParser parseMethod: 'testTest
 	| var_100 |
 	var_100 := SMFakeClass1 new.
-	var_100 sum: 10').
+	var_100 sum: 10'.
 	self assert: res equals: expected
 ]
 
 { #category : #tests }
 SMDefaultSynthesizerTest >> testMethodException [
-	| value res expected obs rec records comp |
+
+	| value res expected obs rec records comp list ev |
 	obs := SMTracer new
-		captureTargets: {SMFakeClassException};
-		executableCode: [ SMFakeClassException runExample ].
+		       captureTargets: { SMFakeClassException };
+		       executableCode: [ SMFakeClassException runExample ].
 	obs run.
-	records := obs records.
+	records := obs records anyOne.
 	records do: [ :r | r receiver uniqueId: 201 ].
-	comp := SMObjectHistoryComposer new 
-		records: records.
-	comp run.
-	value := SMTestMethod new
-		methodName: #testTest;
-		objectUnderTest: comp objectHistories asOrderedCollection first.
+
+	list := { 
+		        { 
+			        #event.
+			        records second }.
+		        { 
+			        #event.
+			        records first }.
+		        { 
+			        #new.
+			        records first receiver } }.
+	value := (SMTestMethod from: list) methodName: #testTest.
+
 	res := value synthesisBy: self getSynthesizer.
-	expected := RBParser
-		parseMethod:
-			'testTest
+	expected := RBParser parseMethod: 'testTest
 	| var_201 |
 	var_201 := SMFakeClassException new.
 	var_201 notRaiseAnError.

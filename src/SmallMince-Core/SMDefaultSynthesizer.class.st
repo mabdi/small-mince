@@ -35,14 +35,33 @@ SMDefaultSynthesizer >> genCallNew: aClassName [
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> genEventFor: theEvent [
-| args stmt |
-	args := theEvent arguments collect: [:arg | arg synthesisBy: self ].
+
+	^ theEvent isException
+		ifTrue: [ self genExceptionEventFor: theEvent ]
+		ifFalse: [ self genReturnEventFor: theEvent ]
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genExceptionEventFor: theEvent [
+
+	| args stmt call |
+	args := theEvent arguments collect: [ :arg | arg synthesisBy: self ].
 	stmt := RBMessageNode
-			 receiver:
-			 (self genVariableFor: theEvent receiver)
-			 selector: theEvent selector
-			 arguments: args.
-	^ stmt
+		        receiver: (self genVariableFor: theEvent receiver)
+		        selector: theEvent selector
+		        arguments: args.
+
+	call := RBMessageNode
+		        receiver:
+		        (RBBlockNode body: (RBSequenceNode statements: { stmt }))
+		        selector: #on:do:
+		        arguments: { 
+				        (RBVariableNode named:
+					         theEvent exception theClass name).
+				        (RBBlockNode
+					         arguments: { (RBVariableNode named: #sm_error) }
+					         body: (RBSequenceNode statements: {  })) }.
+	^ call
 ]
 
 { #category : #'as yet unclassified' }
@@ -103,6 +122,18 @@ SMDefaultSynthesizer >> genObjectRefForMock:  objRef [
 	receiver: (RBVariableNode named: #Instance)
 	selector: #of:
 	arguments: { (RBVariableNode named: objRef theClass name) }
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genReturnEventFor: theEvent [
+
+	| args stmt |
+	args := theEvent arguments collect: [ :arg | arg synthesisBy: self ].
+	stmt := RBMessageNode
+		        receiver: (self genVariableFor: theEvent receiver)
+		        selector: theEvent selector
+		        arguments: args.
+	^ stmt
 ]
 
 { #category : #'as yet unclassified' }

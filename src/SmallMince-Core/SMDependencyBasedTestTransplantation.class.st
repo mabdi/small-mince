@@ -64,8 +64,10 @@ SMDependencyBasedTestTransplantation >> getIncomingEventEdge: node [
 ]
 
 { #category : #initialization }
-SMDependencyBasedTestTransplantation >> initialize [ 
-	minimize := false
+SMDependencyBasedTestTransplantation >> initialize [
+
+	minimize := false.
+	toMock := {  }
 ]
 
 { #category : #removing }
@@ -99,7 +101,7 @@ SMDependencyBasedTestTransplantation >> toMock [
 
 { #category : #accessing }
 SMDependencyBasedTestTransplantation >> toMock: anObject [
-
+	anObject ifNil: [ ^ self ].
 	toMock := anObject
 ]
 
