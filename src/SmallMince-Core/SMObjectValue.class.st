@@ -26,9 +26,10 @@ SMObjectValue >> = anObject [
 ]
 
 { #category : #versions }
-SMObjectValue >> initialize [ 
+SMObjectValue >> initialize [
+
 	super initialize.
-	version := 0
+	version := 1
 ]
 
 { #category : #testing }

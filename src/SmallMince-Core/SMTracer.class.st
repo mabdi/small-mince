@@ -7,8 +7,8 @@ Class {
 		'executableCode',
 		'captureTargets',
 		'coverage',
-		'observations',
-		'records'
+		'records',
+		'links'
 	],
 	#category : #'SmallMince-Core-1.Tracer'
 }
@@ -56,7 +56,9 @@ SMTracer >> executableCode: anObject [
 
 { #category : #initialization }
 SMTracer >> initialize [
-	records := OrderedCollection new.
+
+	records := Dictionary new.
+	links := Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,6 +92,12 @@ SMTracer >> isItSafeToProxyTo: aMethod [
 	({"#initialization"} includes: aMethod protocol)
 		ifTrue: [ ^ false ].
 	^ true
+]
+
+{ #category : #accessing }
+SMTracer >> links [
+
+	^ links
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,8 +143,26 @@ SMTracer >> preCall: selector with: args in: aReceiver [
 
 { #category : #'as yet unclassified' }
 SMTracer >> recordLog: aRecord [
-	records add: aRecord.
-	
+
+	| index |
+	index := SMObjectIndex
+		         forClass: aRecord receiver theClass
+		         anId: aRecord receiver uniqueId.
+	records at: index ifAbsentPut: [ OrderedCollection new ].
+
+	(records at: index) add: aRecord.
+	aRecord returnValue ifNotNil: [ 
+		aRecord returnValue isObjectReference ifTrue: [ 
+			links at: aRecord returnValue ifAbsentPut: [ SMVersionsLinks new ].
+			(links at: aRecord returnValue) addReturn: aRecord receiver ] ].
+	aRecord argsAfter do: [ :argAfter | 
+		argAfter isObjectReference ifTrue: [ 
+			links at: argAfter ifAbsentPut: [ SMVersionsLinks new ].
+			(links at: argAfter) addReturn: aRecord receiver ] ].
+	aRecord arguments do: [ :arg | 
+		arg isObjectReference ifTrue: [ 
+			links at: arg ifAbsentPut: [ SMVersionsLinks new ].
+			(links at: arg) addReturn: aRecord receiver ] ]
 ]
 
 { #category : #accessing }
@@ -146,10 +172,11 @@ SMTracer >> records [
 
 { #category : #'as yet unclassified' }
 SMTracer >> run [
-	[ self installObservers.
-	executableCode value ]
-		ensure: [ self uninstallObservers ].
-	^ observations
+
+	[ 
+	self installObservers.
+	executableCode value ] ensure: [ self uninstallObservers ].
+	
 ]
 
 { #category : #'as yet unclassified' }

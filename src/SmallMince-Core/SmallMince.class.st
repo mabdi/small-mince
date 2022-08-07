@@ -6,32 +6,105 @@ Class {
 	#instVars : [
 		'executableCode',
 		'classesToObserve',
-		'strategy',
-		'slicingCriteria'
+		'slicingCriteria',
+		'minimize',
+		'toMock'
 	],
 	#category : #'SmallMince-Core-0.Core'
 }
-
-{ #category : #examples }
-SmallMince class >> example1 [ 
-	SmallMince new
-		classesToObserve:
-			{SMFakeClass1.
-			SMFakeClass2.
-			SMFakeClass3};
-		classesUnderTest: { SMFakeClass2 };
-		executableCode: [ SMFakeClass3 new example ];
-		strategy: SMMethodBasedFocusedTestsStrategy new;
-		run
-]
 
 { #category : #examples }
 SmallMince class >> exampleMario [
 
 	SmallMince new
 		classesToObserve: 'SmallMince-ToyExample' asPackage classes;
-		slicingCriteria: [:record | record ];
+		slicingCriteria: [ :traces | 
+			(traces associationsSelect: [ :kvp | kvp key theClass = SMEXQBlock ])
+				collect: [ :history | history last ] ];
 		executableCode: [ (SMEXMarioGameTest selector: #testRuns) run ];
+		run
+]
+
+{ #category : #examples }
+SmallMince class >> exampleSCAMPaper [
+
+	SmallMince new
+		classesToObserve: { 
+				SMDriver.
+				SMClassA.
+				SMClassO.
+				SMClassX.
+				SMClassY.
+				SMClassZ.
+				SMClassR };
+		slicingCriteria: [ :traces | 
+			(traces associationsSelect: [ :kvp | kvp key theClass = SMClassO ]) 
+				collect: [ :history | history third ] ];
+		executableCode: [ SMDriverTest run: #test1 ];
+		run
+]
+
+{ #category : #examples }
+SmallMince class >> exampleSCAMPaper2 [
+
+	SmallMince new
+		classesToObserve: { 
+				SMDriver.
+				SMClassA.
+				SMClassO.
+				SMClassX.
+				SMClassY.
+				SMClassZ.
+				SMClassR };
+		slicingCriteria: [ :traces | 
+			(traces associationsSelect: [ :kvp | kvp key theClass = SMClassO ]) 
+				collect: [ :history | history at: (history detect: [ :h | h selector = #mo3 ]) receiver version ] ];
+		executableCode: [ SMDriverTest run: #test2 ];
+		run
+]
+
+{ #category : #examples }
+SmallMince class >> exampleSCAMPaper3 [
+
+	SmallMince new
+		classesToObserve: { 
+				SMDriver.
+				SMClassA.
+				SMClassO.
+				SMClassX.
+				SMClassY.
+				SMClassZ.
+				SMClassR };
+		slicingCriteria: [ :traces | 
+			(traces associationsSelect: [ :kvp | kvp key theClass = SMClassO ]) 
+				collect: [ :history | 
+					history at:
+							(history detect: [ :h | h selector = #mo3 ]) receiver version ] ];
+		minimize: true;
+		executableCode: [ SMDriverTest run: #test2 ];
+		run
+]
+
+{ #category : #examples }
+SmallMince class >> exampleSCAMPaper4 [
+
+	SmallMince new
+		classesToObserve: { 
+				SMDriver.
+				SMClassA.
+				SMClassO.
+				SMClassX.
+				SMClassY.
+				SMClassZ.
+				SMClassR };
+		slicingCriteria: [ :traces | 
+			(traces associationsSelect: [ :kvp | kvp key theClass = SMClassO ]) 
+				collect: [ :history | 
+					history at:
+							(history detect: [ :h | h selector = #mo3 ]) receiver version ] ];
+		minimize: true;
+		toMock: {SMClassX};
+		executableCode: [ SMDriverTest run: #test2 ];
 		run
 ]
 
@@ -55,19 +128,32 @@ SmallMince >> executableCode: anObject [
 	executableCode := anObject
 ]
 
+{ #category : #initialization }
+SmallMince >> initialize [ 
+	minimize := false
+]
+
+{ #category : #initialization }
+SmallMince >> minimize: val [
+
+	minimize := val
+]
+
 { #category : #running }
 SmallMince >> run [
 
-	| traces testMethodModels generatedTests |
-	traces := SMTracer new
+	| tracer testMethodModels generatedTests |
+	tracer := SMTracer new
 		          captureTargets: self classesToObserve;
 		          executableCode: self executableCode;
-		          run;
-		          records.
+		          run.
 	testMethodModels := SMDependencyBasedTestTransplantation new
-		                    traces: traces;
+		                    traces: tracer records;
+		                    links: tracer links;
 		                    slicingCriteria: self slicingCriteria;
-		                    run.
+		                    setMinimize: minimize;
+		toMock: toMock;                    
+		run.
 	generatedTests := Dictionary new.
 	testMethodModels keysAndValuesDo: [ :className :arrayOfMethods | 
 		generatedTests
@@ -75,7 +161,7 @@ SmallMince >> run [
 			put: (arrayOfMethods collect: [ :methodModel | 
 					 methodModel synthesisBy: SMDefaultSynthesizer new ]) ].
 	generatedTests keysAndValuesDo: [ :key :value | 
-		SMTestClassBuilder new buildFor: key methods: value ]
+		SMTestClassBuilder new buildFor: key theClass name methods: value ]
 ]
 
 { #category : #accessing }
@@ -88,4 +174,16 @@ SmallMince >> slicingCriteria [
 SmallMince >> slicingCriteria: anObject [
 
 	slicingCriteria := anObject
+]
+
+{ #category : #accessing }
+SmallMince >> toMock [
+
+	^ toMock
+]
+
+{ #category : #accessing }
+SmallMince >> toMock: anObject [
+
+	toMock := anObject
 ]

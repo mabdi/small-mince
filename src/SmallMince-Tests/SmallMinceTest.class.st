@@ -8,6 +8,31 @@ Class {
 }
 
 { #category : #tests }
-SmallMinceTest >> testSystemTest1 [
-	SmallMince example1
+SmallMinceTest >> testSystem_ExampleMario [
+
+	SmallMince exampleMario
+]
+
+{ #category : #tests }
+SmallMinceTest >> testSystem_ExampleSCAMPaper [
+
+	SmallMince exampleSCAMPaper
+]
+
+{ #category : #tests }
+SmallMinceTest >> testSystem_ExampleSCAMPaper2 [
+
+	SmallMince exampleSCAMPaper2
+]
+
+{ #category : #tests }
+SmallMinceTest >> testSystem_ExampleSCAMPaper3 [
+
+	SmallMince exampleSCAMPaper3
+]
+
+{ #category : #tests }
+SmallMinceTest >> testSystem_ExampleSCAMPaper4 [
+
+	SmallMince exampleSCAMPaper4
 ]

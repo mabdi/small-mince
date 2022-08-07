@@ -5,6 +5,7 @@ Class {
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
 		'traces',
+		'links',
 		'results',
 		'slicingCriteria'
 	],
@@ -14,6 +15,18 @@ Class {
 { #category : #initialization }
 SMAbstractStrategy >> initialize [ 
 	results := Dictionary new
+]
+
+{ #category : #accessing }
+SMAbstractStrategy >> links [
+
+	^ links
+]
+
+{ #category : #accessing }
+SMAbstractStrategy >> links: anObject [
+
+	links := anObject
 ]
 
 { #category : #'as yet unclassified' }

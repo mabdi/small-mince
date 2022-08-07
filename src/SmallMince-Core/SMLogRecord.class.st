@@ -78,6 +78,12 @@ SMLogRecord >> exception: anException [
 	exception := anException sm_valueReference
 ]
 
+{ #category : #'reflective operations' }
+SMLogRecord >> gtDisplayString [
+
+	^ selector 
+]
+
 { #category : #testing }
 SMLogRecord >> isException [
 
@@ -90,9 +96,21 @@ SMLogRecord >> isReturn [
 	^ returnValue isNotNil 
 ]
 
+{ #category : #testing }
+SMLogRecord >> isStatePreserving [
+
+	^ state = stateAfter
+]
+
 { #category : #accessing }
 SMLogRecord >> locals [
 	^ locals
+]
+
+{ #category : #printing }
+SMLogRecord >> printOn: aStream [
+
+	aStream nextPutAll: self gtDisplayString
 ]
 
 { #category : #accessing }

@@ -47,6 +47,11 @@ SMAbstractValue >> hash [
 ]
 
 { #category : #testing }
+SMAbstractValue >> isObjectReference [
+	^ false
+]
+
+{ #category : #testing }
 SMAbstractValue >> isObjectValue [
 	^ false
 ]

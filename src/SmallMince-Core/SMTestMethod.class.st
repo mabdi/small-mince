@@ -4,21 +4,30 @@ Class {
 	#traits : 'SMInternalClassesTrait',
 	#classTraits : 'SMInternalClassesTrait classTrait',
 	#instVars : [
-		'objectUnderTest',
-		'dependencies',
-		'methodName'
+		'methodName',
+		'events'
 	],
 	#category : #'SmallMince-Core-Model'
 }
 
-{ #category : #accessing }
-SMTestMethod >> dependencies [
-	^ dependencies
+{ #category : #'instance creation' }
+SMTestMethod class >> from: anOrderedCollection [
+
+	^ self new
+		  events: anOrderedCollection reverse;
+		  yourself
 ]
 
 { #category : #accessing }
-SMTestMethod >> dependencies: anObject [
-	dependencies := anObject
+SMTestMethod >> events [
+
+	^ events
+]
+
+{ #category : #accessing }
+SMTestMethod >> events: anObject [
+
+	events := anObject
 ]
 
 { #category : #accessing }
@@ -29,16 +38,6 @@ SMTestMethod >> methodName [
 { #category : #accessing }
 SMTestMethod >> methodName: anObject [
 	methodName := anObject
-]
-
-{ #category : #accessing }
-SMTestMethod >> objectUnderTest [
-	^ objectUnderTest
-]
-
-{ #category : #accessing }
-SMTestMethod >> objectUnderTest: anObject [
-	objectUnderTest := anObject
 ]
 
 { #category : #'as yet unclassified' }

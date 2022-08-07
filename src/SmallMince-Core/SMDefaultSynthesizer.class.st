@@ -10,6 +10,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SMDefaultSynthesizer class >> mockClassName [
+	^ #Mock
+]
+
+{ #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> defaultVariableNameFor: aUniqId [
 	^ 'var_', aUniqId asString
 ]
@@ -29,6 +34,18 @@ SMDefaultSynthesizer >> genCallNew: aClassName [
 ]
 
 { #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genEventFor: theEvent [
+| args stmt |
+	args := theEvent arguments collect: [:arg | arg synthesisBy: self ].
+	stmt := RBMessageNode
+			 receiver:
+			 (self genVariableFor: theEvent receiver)
+			 selector: theEvent selector
+			 arguments: args.
+	^ stmt
+]
+
+{ #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> genLiteral: theValue [
 	^ RBLiteralValueNode value: theValue
 ]
@@ -36,6 +53,56 @@ SMDefaultSynthesizer >> genLiteral: theValue [
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> genLiteralFromString: theValue [
 	^ RBParser parseExpression: (theValue asString)
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genMockFor: anEvent [
+
+	"xMocked stub mx1 willReturn: nil.
+(xMocked stub mx2Y: (Instance of: SMClassY)) willReturn: 1."
+
+	| var stmt args retVal |
+	
+	var := self genVariableFor: anEvent receiver.
+	args := anEvent arguments collect: [:arg | arg isObjectReference ifTrue: [ self genObjectRefForMock: arg ] ifFalse: [ self halt. ]  ].
+	retVal := self genObjectRefForMock: anEvent returnValue.
+	stmt := RBMessageNode receiver: var selector: #stub.
+	stmt := RBMessageNode
+		        receiver: stmt
+		        selector: anEvent selector
+		        arguments: args.
+	stmt := RBMessageNode
+		        receiver: stmt
+		        selector: #willReturn:
+		        arguments: { retVal }.
+	^ stmt
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genMockNewFor: objRef [
+
+	^ self
+		  genAssgnmentNode: (self genCallNew: self class mockClassName)
+		  toVariableNode: (self genVariableFor: objRef)
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genNewFor: objRef [
+	^ self
+				 genAssgnmentNode:
+				 (self genCallNew: objRef theClass name)
+				 toVariableNode:
+				 (self genVariableFor: objRef)
+	
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> genObjectRefForMock:  objRef [
+
+	^ RBMessageNode
+	receiver: (RBVariableNode named: #Instance)
+	selector: #of:
+	arguments: { (RBVariableNode named: objRef theClass name) }
 ]
 
 { #category : #'as yet unclassified' }
@@ -142,6 +209,16 @@ SMDefaultSynthesizer >> synthesisDictionaryValueNonEmpty: anObject [
 							(val)}) ].
 	statements add: receiver.	"It's a contract between methods in this synthesizer: if the type is a sequence, the last statement refers the variable"
 	^ RBSequenceNode statements: statements
+]
+
+{ #category : #'as yet unclassified' }
+SMDefaultSynthesizer >> synthesisEventEntry: event [
+
+	event first = #new ifTrue: [ ^ self genNewFor: event second ].
+	event first = #mockNew ifTrue: [ ^ self genMockNewFor: event second ].
+	event first = #mock ifTrue: [ ^ self genMockFor: event second ].
+	event first = #event ifTrue: [ ^ self genEventFor: event second ].
+	self halt.
 ]
 
 { #category : #'as yet unclassified' }
@@ -277,19 +354,23 @@ SMDefaultSynthesizer >> synthesisSkippedValue: anObject [
 
 { #category : #'as yet unclassified' }
 SMDefaultSynthesizer >> synthesisTestMethod: aTestMethod [
+
 	| theMethod theSequence statements temporaries |
 	statements := OrderedCollection new.
 	methodModel := aTestMethod.
-	statements addAll: (aTestMethod objectUnderTest synthesisBy: self).
+	statements addAll:
+		(aTestMethod events collect: [ :event | self synthesisEventEntry: event ]).
+
 	temporaries := statements
-		select: #isAssignment
-		thenCollect: [ :anAssignment | RBTemporaryNode named: anAssignment variable name ].
+		               select: #isAssignment
+		               thenCollect: [ :anAssignment | 
+		               RBVariableNode named: anAssignment variable name ].
 	theSequence := RBSequenceNode
-		temporaries: temporaries
-		statements: statements.
+		               temporaries: temporaries
+		               statements: statements.
 	theMethod := RBMethodNode
-		selector: aTestMethod methodName
-		body: theSequence.
+		             selector: aTestMethod methodName
+		             body: theSequence.
 	^ theMethod
 ]
 
