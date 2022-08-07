@@ -98,7 +98,7 @@ tmp_1'.
 { #category : #tests }
 SMDefaultSynthesizerTest >> testFakeHttp [
 
-	| value res expected obs records comp objectUnderTest nameMapping synthesizer |
+	| value res expected1 expected2 obs records nameMapping synthesizer |
 	obs := SMTracer new
 		       captureTargets: { 
 				       SMFakeHttpAgent.
@@ -135,12 +135,12 @@ SMDefaultSynthesizerTest >> testFakeHttp [
 					         :history | history last ] ];
 		         run.
 	value := value anyOne first.
-	
+
 
 	synthesizer := self getSynthesizer.
 	synthesizer varNameMapper: nameMapping.
 	res := value synthesisBy: synthesizer.
-	expected := RBParser parseMethod: 'test1
+	expected1 := RBParser parseMethod: 'test1
 	| var_2 var_4 var_3 var_1 |
 	var_2 := SMFakeUrl new.
 	var_2 url: ''google.com''.
@@ -153,7 +153,21 @@ SMDefaultSynthesizerTest >> testFakeHttp [
 	var_1 url: var_2.
 	var_1 method: var_3.
 	var_1 execute'.
-	self assert: res equals: expected
+	expected2 := RBParser parseMethod: 'test1
+	| var_4 var_3 var_1 var_2 |
+	var_4 := SMFakeProtocol new.
+	var_4 protocol: ''https''.
+	var_3 := SMFakeMethod new.
+	var_3 method: #GET.
+	var_1 := SMFakeHttpAgent new.
+	var_2 := SMFakeUrl new.
+	var_2 url: ''google.com''.
+	var_2 protocol: var_4.
+	var_1 url: var_2.
+	var_1 method: var_3.
+	var_1 execute'.
+	self flag: #todo. "find a better way to assert the correct answer"
+	self assert: res = expected1 | (res = expected2)
 ]
 
 { #category : #tests }

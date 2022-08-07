@@ -113,13 +113,13 @@ SMDependencyBasedTestTransplantation >> traverseGraphV: theV S: theS [
 	results := OrderedCollection new.
 
 	[ theV isEmpty ] whileFalse: [ 
-		targetNode := theV detect: [ :node | 
+		targetNode := theV asOrderedCollection detect: [ :node | 
 			              self canWePickNode: node V: theV ].
 		self flag: #todo. "I dont consider return and argRet in POC. use recursive call for implemeting them. It will make plenty of cases (exponential computation)"
 		theV remove: targetNode.
 		targetNode isObjectToMock
-			ifTrue: [
-				thisNode := targetNode. 
+			ifTrue: [ 
+				thisNode := targetNode.
 				index := targetNode mockEvent argsAfter indexOf: targetNode.
 				targetVersion := (targetNode mockEvent arguments at: 2) version.
 				[ thisNode version > targetVersion ] whileTrue: [ 
@@ -130,8 +130,8 @@ SMDependencyBasedTestTransplantation >> traverseGraphV: theV S: theS [
 					thisNode := edge receiver.
 					self flag: #todo "You may go deeper in the graph in advanced use cases" ].
 				theS add: { 
-							#mockNew.
-							targetNode }. ]
+						#mockNew.
+						targetNode } ]
 			ifFalse: [ 
 				edge := self getIncomingEventEdge: targetNode.
 				edge
